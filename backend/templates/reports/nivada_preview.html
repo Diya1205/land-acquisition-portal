@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        @font-face {
+            font-family: 'Noto Serif Devanagari';
+            src: url('{{ font_path }}');
+            font-weight: normal;
+        }
+
+        @font-face {
+            font-family: 'Noto Serif Devanagari';
+            src: url('{{ bold_font_path }}');
+            font-weight: bold;
+        }
+        @page {
+            size: A4;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            margin-left: 40px;
+            margin-right: 35px;
+        }
+
+        body {
+            font-family: 'Noto Serif Devanagari';
+            font-size: 14px;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADER */
+
+        .header-table {
+            width: 100%;
+            border: none;
+            border-collapse: collapse;
+            margin-bottom: 4px;
+        }
+
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .logo-cell {
+            width: 70px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .logo-cell img {
+            width: 65px;
+            height: auto;
+        }
+
+        .office-cell {
+            text-align: center;
+            vertical-align: middle;
+            padding: 0 8px;
+        }
+
+        .office-main {
+            font-size: 21px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .office-sub {
+            font-size: 13px;
+            font-family: 'Noto Serif Devanagari Bold';
+            line-height: 1.6;
+            margin-top: 3px;
+        }
+
+        .office-contact {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 4px;
+            line-height: 1.6;
+        }
+
+        /* LINES */
+
+        .separator {
+            border: none;
+            border-top: 1.5px solid #000;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+
+        .separator-thin {
+            border: none;
+            border-top: 1px solid #000;
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        /* REF ROW */
+
+        .ref-row-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ref-row-table td {
+            border: none;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .ref-left {
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .ref-right {
+            text-align: right;
+            vertical-align: top;
+        }
+
+        /* ADDRESSEE */
+
+        .addressee {
+            margin-top: 18px;
+            font-size: 14px;
+            line-height: 2;
+        }
+
+        /* SUBJECT */
+
+        .subject-block {
+            margin-top: 14px;
+            font-size: 14px;
+            line-height: 1.9;
+            font-weight: bold;
+        }
+
+        .subject-block .label {
+            font-weight: bold;
+        }
+
+        /* PARAGRAPHS */
+
+        .body-para {
+            margin-top: 16px;
+            font-size: 14px;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        .closing-para {
+            margin-top: 16px;
+            font-size: 14px;
+            line-height: 2;
+            text-align: justify;
+        }
+
+        /* TABLES */
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+            font-size: 13.5px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #000;
+            padding: 7px 10px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .data-table th {
+            font-weight: bold;
+            background-color: #ffffff;
+        }
+
+
+        .col-nivada {
+            width: 22%;
+        }
+        
+        .col-name {
+            width: 36%;
+        }
+        
+        .col-gat {
+            width: 18%;
+        }
+        
+        .col-area {
+            width: 24%;
+        }
+
+        /* SIGNATURE */
+
+        .signature-block {
+            margin-top: 55px;
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+       
+
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <table class="header-table">
+
+        <tr>
+
+            <td class="logo-cell">
+
+                <img
+                    src="{{ logo_path }}"
+                    alt="Logo"
+                >
+
+            </td>
+
+            <td class="office-cell">
+
+                <div class="office-main">
+                    जिल्हाधिकारी कार्यालय, अहिल्यानगर
+                </div>
+
+                <div class="office-sub">
+                    (भूसंपादन शाखा क्र.{{ record.office|cut:"Land Acquisition No. "|default:"-" }})
+                </div>
+
+                <div class="office-sub">
+                    {{ officer_address|default:"-" }}
+                </div>
+
+                <div class="office-contact">
+                    दूरध्वनी : (0241)-2422926
+                    &nbsp;&nbsp;
+                    ई-मेल : {{ officer_email|default:"-" }}
+                </div>
+
+            </td>
+
+            <td class="logo-cell">
+
+                <img
+                    src="{{ logo_path }}"
+                    alt="Logo"
+                >
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <hr class="separator">
+    <hr class="separator-thin">
+
+    <!-- REF -->
+
+    <table class="ref-row-table">
+
+        <tr>
+
+            <td class="ref-left">
+                जा.क्र.भूसं/
+                {% if record.nivada_number and record.nivada_number != 'nan' %}
+                {{ record.nivada_number }}
+                {% else %}
+                -
+                {% endif %}
+            </td>
+
+            <td class="ref-right">
+                दिनांक.
+                {{ current_date }}
+            </td>
+
+        </tr>
+
+    </table>
+
+    <hr class="separator-thin">
+
+    <!-- APPLICANT -->
+
+    <div class="addressee">
+
+        प्रति,
+        
+        <br>
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        श्री.
+        
+        {% if record.Nvd_Name and record.Nvd_Name != 'nan' %}
+        {{ record.Nvd_Name }}
+        {% else %}
+        -
+        {% endif %}
+        
+        <br>
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        रा.
+        
+        {% if address_village %}
+        {{ address_village }}
+        {% else %}
+        -
+        {% endif %}
+        
+        ,
+        
+        ता.
+        
+        {% if address_taluka %}
+        {{ address_taluka }}
+        {% else %}
+        -
+        {% endif %}
+        
+        ,
+        
+        जि.
+        
+        {% if address_district %}
+        {{ address_district }}
+        {% else %}
+        -
+        {% endif %}
+        
+    </div>
+
+    <!-- SUBJECT -->
+
+    <div class="subject-block">
+
+        <span class="label">
+            विषय
+        </span>
+
+        - भूसंपादन दाखला मिळणे बाबत.
+
+        <br>
+
+        <span class="label">
+            संदर्भ
+        </span>
+
+        - आपलेकडील अर्ज दिनांक
+        {{ current_date }}
+
+    </div>
+
+    <!-- PARAGRAPH -->
+
+    {% if is_acquired %}
+
+    <div class="body-para">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        उपरोक्त संदर्भीय विषयान्वये आपण दिलेल्या अर्जाव्दारे व
+        या कार्यालयातील उपलब्ध कागदपत्रांवरून सदरची माहिती
+        देण्यात येत आहे.
+    </div>
+
+    <div class="body-para">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        मौजे
+        {{ record.village|default:"-" }}
+
+        ता.
+        {{ record.taluka|default:"-" }}
+
+        {% if record.land_no_type == "Survey No" %}
+
+        जि. अहिल्यानगर येथील स.नं.
+        {{ record.survey_number|default:"-" }}
+
+        {% else %}
+
+        जि. अहिल्यानगर येथील ग.नं.
+        {{ record.gat_number|default:"-" }}
+
+        {% endif %}
+
+        मधील क्षेत्र
+        {{ record.land_area|default:"-" }}
+
+        हे.आर. क्षेत्र भूसंपादन या कार्यालयातील निवाडा क्र.
+        {{ record.nivada_number|default:"-" }}
+
+        अन्वये खातेदार
+        {{ record.Nvd_Name|default:"-" }}
+
+        यांचे
+        {{ record.land_area|default:"-" }}
+
+        हे.आर. क्षेत्र एवढे क्षेत्र
+        {{ record.project_name|default:"-" }} साठी
+        संपादित झाल्याचे दिसून येते.
+    </div>
+
+    <table class="data-table">
+        <tr>
+            <th class="col-nivada">निवाड्यातील अनुक्रमांक</th>
+            <th class="col-name">खातेदाराचे नाव</th>
+            <th class="col-gat">
+                {% if record.land_no_type == "Survey No" %}
+                    स.नं.
+                {% else %}
+                    ग.नं.
+                {% endif %}
+            </th>
+            <th class="col-area">संपादित क्षेत्र (हे.आर.)</th>
+        </tr>
+
+        <tr>
+            <td>{{ record.nivada_number|default:"-" }}</td>
+            <td>{{ record.Nvd_Name|default:"-" }}</td>
+            <td>
+                {% if record.land_no_type == "Survey No" %}
+                    {{ record.survey_number|default:"-" }}
+                {% else %}
+                    {{ record.gat_number|default:"-" }}
+                {% endif %}
+            </td>
+            <td>{{ record.land_area|default:"-" }}</td>
+        </tr>
+    </table>
+
+   
+
+    {% else %}
+
+    <div class="body-para">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        आपण मौजे.
+        {{ record.village|default:"-" }}
+
+        तालुका
+        {{ record.taluka|default:"-" }}
+
+        {% if record.land_no_type == "Survey No" %}
+
+        जिल्हा अहिल्यानगर येथील सर्व्हे क्र.
+        {{ record.survey_number|default:"-" }}
+
+        {% else %}
+
+        जिल्हा अहिल्यानगर येथील गट क्र.
+        {{ record.gat_number|default:"-" }}
+
+        {% endif %}
+
+        विषयी भूसंपादन दाखल्याची मागणी केली होती.
+        त्यास अनुसरुन आपणास कळविण्यात येते कि, मौजे.
+        {{ record.village|default:"-" }}
+
+        तालुका.
+        {{ record.taluka|default:"-" }}
+
+        {% if record.land_no_type == "Survey No" %}
+
+        येथील सर्व्हे क्र.
+        {{ record.survey_number|default:"-" }}
+            
+        {% else %}
+            
+        येथील गट क्र.
+        {{ record.gat_number|default:"-" }}
+            
+        {% endif %}
+
+        मधील क्षेत्र कोणत्याही सार्वजनिक कामासाठी संपादित केलेले नाही.
+        सदरचा गट/सर्व्हे क्र भूसंपादनासाठी प्रस्तावित नसल्याचा दाखला
+        सक्षम अधिकारीकडुन प्राप्त करुन घ्यावा.
+    </div>
+
+    {% endif %}
+
+    <!-- SIGNATURE -->
+
+    <div class="signature-block">
+
+        आपला विश्वासू,
+
+        <br><br><br>
+
+        Signed by
+
+        <br>
+
+        {{ officer_name }}
+
+        <br>
+
+        Date: {{ current_date }}
+
+        <br><br>
+
+        {{ officer_name }}
+
+        <br>
+
+
+        अहिल्यानगर
+
+    </div>
+    
+
+</body>
+
+</html>

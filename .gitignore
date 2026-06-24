@@ -1,0 +1,28 @@
+# AWS Keys
+*.pem
+
+# Archives
+*.rar
+*.zip
+*.7z
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+
+# Next.js
+frontend/.next/
+frontend/node_modules/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.production
