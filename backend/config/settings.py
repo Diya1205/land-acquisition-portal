@@ -98,7 +98,7 @@ DATABASES = {
         "PORT": os.getenv("SQLSERVER_PORT"),
         "OPTIONS": {
             "driver": "ODBC Driver 17 for SQL Server",
-            "extra_params": "TrustServerCertificate=yes",
+            "extra_params": "Encrypt=no;TrustServerCertificate=yes",
         },
     },
 
@@ -111,7 +111,7 @@ DATABASES = {
         "PORT": os.getenv("SQLSERVER_PORT"),
         "OPTIONS": {
             "driver": "ODBC Driver 17 for SQL Server",
-            "extra_params": "TrustServerCertificate=yes",
+            "extra_params": "Encrypt=no;TrustServerCertificate=yes",
         },
     },
 }
