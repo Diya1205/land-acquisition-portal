@@ -704,8 +704,8 @@ export default function Home() {
               <FaFilter size={10} className="text-blue-600" />
               Land Search
             </h2>
-          </div>
 
+          </div>
           <div className="flex-1 px-3 pb-3 min-h-0 flex flex-col justify-between overflow-y-auto pr-1">
 
             <div className="space-y-1.5">

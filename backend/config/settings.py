@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -77,16 +79,46 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ahmednagar_laq',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
+    },
+
+    "dopdata": {
+        "ENGINE": "mssql",
+        "NAME": "DOPDATA",
+        "USER": os.getenv("SQLSERVER_USER"),
+        "PASSWORD": os.getenv("SQLSERVER_PASSWORD"),
+        "HOST": os.getenv("SQLSERVER_HOST"),
+        "PORT": os.getenv("SQLSERVER_PORT"),
+        "OPTIONS": {
+            "driver": "ODBC Driver 17 for SQL Server",
+            "extra_params": "TrustServerCertificate=yes",
+        },
+    },
+
+    "dopimages": {
+        "ENGINE": "mssql",
+        "NAME": "DOPIMAGES",
+        "USER": os.getenv("SQLSERVER_USER"),
+        "PASSWORD": os.getenv("SQLSERVER_PASSWORD"),
+        "HOST": os.getenv("SQLSERVER_HOST"),
+        "PORT": os.getenv("SQLSERVER_PORT"),
+        "OPTIONS": {
+            "driver": "ODBC Driver 17 for SQL Server",
+            "extra_params": "TrustServerCertificate=yes",
+        },
+    },
 }
 
+DATABASE_ROUTERS = [
+    "config.db_router.DatabaseRouter",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -142,19 +174,17 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
 
-EMAIL_HOST_USER = "diya.patil1205@gmail.com"
-EMAIL_HOST_PASSWORD = "gncbeltjcqjxbqui"
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = "no-reply@tirthinfotech.com"
 
 X_FRAME_OPTIONS = "ALLOWALL"
-
-
-# gmail app pass:gncb eltj cqjx bqui
