@@ -5,7 +5,7 @@ import { FaMobileAlt, FaShieldAlt, FaExclamationCircle, FaArrowRight, FaUserShie
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function LoginPage() {
     const [mobileNumber, setMobileNumber] = useState("");
     const router = useRouter();
@@ -26,7 +26,7 @@ export default function LoginPage() {
         setLoading(true);
 
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/login/",
+          `${API_URL}/login/`,
           {
             mobile_number: mobileNumber
           }

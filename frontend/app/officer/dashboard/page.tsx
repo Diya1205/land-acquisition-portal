@@ -14,7 +14,7 @@ import {
   FaHome,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
-
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
 export default function OfficerDashboard() {
   const router = useRouter();
   const [requests, setRequests] = useState<any[]>([]);
@@ -42,7 +42,7 @@ export default function OfficerDashboard() {
 
     axios
       .get(
-        `http://127.0.0.1:8000/api/officer/requests/${officerData.officer_id}/`
+        `${API_BASE}/officer/requests/${officerData.officer_id}/`
       )
       .then((response) => {
 
@@ -501,12 +501,12 @@ export default function OfficerDashboard() {
                   
                     axios
                       .post(
-                        `http://127.0.0.1:8000/api/officer/request/generate-pdf/${selectedRequest.id}/`
+                        `${API_BASE}/officer/request/generate-pdf/${selectedRequest.id}/`
                       )
                       .then((response) => {
 
                         const pdfUrl =
-                          `http://127.0.0.1:8000${response.data.pdf_file}`;
+                          `${API_BASE}${response.data.pdf_file}`;
                                               
                         fetch(pdfUrl)
                           .then((res) => res.blob())
@@ -620,7 +620,7 @@ export default function OfficerDashboard() {
                     );
                   
                     await axios.post(
-                      `http://127.0.0.1:8000/api/officer/request/upload-signed/${selectedRequest.id}/`,
+                      `${API_BASE}/officer/request/upload-signed/${selectedRequest.id}/`,
                       formData
                     );
                   

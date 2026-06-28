@@ -19,9 +19,10 @@ import {
   FaMinus,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
+
 export default function Home() {
   const router = useRouter();
-  const API_BASE = "http://127.0.0.1:8000/api";
 
   const [districts, setDistricts] = useState<string[]>([]);
   const [talukas, setTalukas] = useState<string[]>([]);
@@ -632,7 +633,7 @@ export default function Home() {
       }
 
       setOriginalImageUrl(
-        `http://127.0.0.1:8000${res.data.image_url}`
+        `${API_BASE}${res.data.image_url}`
       );
       setZoom(1);
       setShowOriginalModal(true);

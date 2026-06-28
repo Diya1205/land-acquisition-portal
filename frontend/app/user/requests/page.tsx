@@ -7,7 +7,7 @@ import {
   FaFileAlt,
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
 export default function RequestsPage() {
 
   const router = useRouter();
@@ -29,7 +29,7 @@ export default function RequestsPage() {
 
     axios
       .post(
-        "http://127.0.0.1:8000/api/request-status/",
+        `${API_BASE}/request-status/`,
         {
           mobile_number: mobile,
         }
