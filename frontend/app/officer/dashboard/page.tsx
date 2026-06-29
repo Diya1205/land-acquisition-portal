@@ -505,8 +505,10 @@ export default function OfficerDashboard() {
                       )
                       .then((response) => {
 
+                        const backendOrigin = new URL(API_BASE).origin;
+
                         const pdfUrl =
-                          `${API_BASE}${response.data.pdf_file}`;
+                          `${backendOrigin}${response.data.pdf_file}`;
                                               
                         fetch(pdfUrl)
                           .then((res) => res.blob())
