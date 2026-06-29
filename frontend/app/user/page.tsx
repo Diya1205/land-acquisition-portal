@@ -631,9 +631,10 @@ export default function Home() {
         return;
 
       }
+      const backendOrigin = new URL(API_BASE).origin;
 
       setOriginalImageUrl(
-        `${API_BASE}${res.data.image_url}`
+        `${backendOrigin}${res.data.image_url}`
       );
       setZoom(1);
       setShowOriginalModal(true);
