@@ -843,18 +843,21 @@ def approve_request(request, request_id):
             
         "font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
             / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
+        
         "bold_font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
-            / "NotoSerifDevanagari-Bold.ttf"
+            / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
-        "logo_path":
-            "file:///C:/Land_acquisition/backend/assets/logo.png",
+        
+        "logo_path": (
+            settings.BASE_DIR
+            / "assets"
+            / "logo.png"
+        ).as_uri(),
     }
 
     html = template.render(context)
@@ -1090,18 +1093,21 @@ def generate_certificate_pdf(request, request_id):
         # "officer_designation": officer.designation.designation if officer and officer.designation else "-",
         "font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
             / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
+        
         "bold_font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
-            / "NotoSerifDevanagari-Bold.ttf"
+            / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
-        "logo_path":
-            "file:///C:/Land_acquisition/backend/assets/logo.png",
+        
+        "logo_path": (
+            settings.BASE_DIR
+            / "assets"
+            / "logo.png"
+        ).as_uri(),
     }
 
     html = template.render(context)
@@ -1376,20 +1382,21 @@ def certificate_preview(request):
 
         "font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
             / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
 
         "bold_font_path": (
             settings.BASE_DIR
-            / "static"
             / "fonts"
-            / "NotoSerifDevanagari-Bold.ttf"
+            / "NotoSerifDevanagari-Regular.ttf"
         ).as_uri(),
 
-        "logo_path":
-            "file:///C:/Land_acquisition/backend/assets/logo.png",
+        "logo_path": (
+            settings.BASE_DIR
+            / "assets"
+            / "logo.png"
+        ).as_uri(),
     }
 
     html = template.render(context)
