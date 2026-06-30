@@ -256,7 +256,14 @@ def search_records(request):
         valid_records(),
         request
     )
-
+    
+    # Hide records without a valid owner name
+    queryset = queryset.exclude(
+        Q(nvd_name__isnull=True) |
+        Q(nvd_name="") |
+        Q(nvd_name="-")
+    )
+    
     queryset = queryset.order_by(
         'nvd_district',
         'nvd_tahsil',
