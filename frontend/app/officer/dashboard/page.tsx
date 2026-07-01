@@ -510,17 +510,13 @@ export default function OfficerDashboard() {
                         const a = document.createElement("a");
                                               
                         a.href = pdfUrl;
-                                              
                         a.target = "_blank";
-                                              
                         a.download = `certificate_${selectedRequest.id}.pdf`;
                                               
                         document.body.appendChild(a);
-                                              
                         a.click();
-                                              
                         document.body.removeChild(a);
-                                              
+
                         setTimeout(() => {
                         
                           fetch(
