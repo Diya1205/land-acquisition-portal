@@ -505,72 +505,58 @@ export default function OfficerDashboard() {
                       )
                       .then((response) => {
 
-                        const backendOrigin = new URL(API_BASE).origin;
+                        const pdfUrl = response.data.pdf_file;
 
-                        const pdfUrl =
-                          `${backendOrigin}${response.data.pdf_file}`;
+                        const a = document.createElement("a");
                                               
-                        fetch(pdfUrl)
-                          .then((res) => res.blob())
-                          .then((blob) => {
+                        a.href = pdfUrl;
+                                              
+                        a.target = "_blank";
+                                              
+                        a.download = `certificate_${selectedRequest.id}.pdf`;
+                                              
+                        document.body.appendChild(a);
+                                              
+                        a.click();
+                                              
+                        document.body.removeChild(a);
+                                              
+                        setTimeout(() => {
+                        
+                          fetch(
+                            "http://127.0.0.1:5000/open-signer",
+                            {
+                              method: "POST"
+                            }
+                          )
+                          .then((res) => {
                           
-                            const url =
-                              window.URL.createObjectURL(blob);
+                            console.log(
+                              "Signer API Status:",
+                              res.status
+                            );
                           
-                            const a =
-                              document.createElement("a");
+                            return res.json();
                           
-                            a.href = url;
+                          })
+                          .then((data) => {
                           
-                            a.download =
-                              `certificate_${selectedRequest.id}.pdf`;
+                            console.log(
+                              "Signer API Response:",
+                              data
+                            );
                           
-                            document.body.appendChild(a);
+                          })
+                          .catch((err) => {
                           
-                            a.click();
-                          
-                            document.body.removeChild(a);
-                          
-                            window.URL.revokeObjectURL(url);
-                          
-                            setTimeout(() => {
-                            
-                              fetch(
-                                "http://127.0.0.1:5000/open-signer",
-                                {
-                                  method: "POST"
-                                }
-                              )
-                              .then((res) => {
-                              
-                                console.log(
-                                  "Signer API Status:",
-                                  res.status
-                                );
-                              
-                                return res.json();
-                              
-                              })
-                              .then((data) => {
-                              
-                                console.log(
-                                  "Signer API Response:",
-                                  data
-                                );
-                              
-                              })
-                              .catch((err) => {
-                              
-                                console.error(
-                                  "Signer Error:",
-                                  err
-                                );
-                              
-                              });
-                            
-                            }, 2000);
+                            console.error(
+                              "Signer Error:",
+                              err
+                            );
                           
                           });
+                        
+                        }, 2000);
 
                         
                       
