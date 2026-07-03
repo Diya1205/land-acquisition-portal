@@ -1210,14 +1210,14 @@ def upload_signed_pdf(request, request_id):
         email = EmailMessage(
             subject="Land Acquisition Certificate Approved",
             body=f"""
-Dear {certificate_request.applicant_name},
-
-Your certificate request has been approved.
-
-Request ID: {certificate_request.id}
-
-Please find the signed certificate attached.
-""",
+            Dear {certificate_request.applicant_name},
+            
+            Your certificate request has been approved.
+            
+            Request ID: {certificate_request.id}
+            
+            Please find the signed certificate attached.
+            """,
             
             from_email=None,
             to=[
@@ -1244,7 +1244,10 @@ Please find the signed certificate attached.
         print("SEND RESULT =", result)
         print("AFTER SEND")
     return Response({
-        "success": True
+        "success": True,
+        "message": "Signed PDF uploaded successfully.",
+        "request_id": certificate_request.id,
+        "status": certificate_request.status
     })
 
 

@@ -503,70 +503,65 @@ export default function OfficerDashboard() {
                       .post(
                         `${API_BASE}/officer/request/generate-pdf/${selectedRequest.id}/`
                       )
-                      .then((response) => {
+                      .then(async (response) => {
 
-                        const pdfUrl = response.data.pdf_file;
-
-                        const a = document.createElement("a");
-                                              
-                        a.href = pdfUrl;
-                        a.target = "_blank";
-                        a.download = `certificate_${selectedRequest.id}.pdf`;
-                                              
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-
-                        setTimeout(() => {
-                        
-                          fetch(
+                          console.log(response.data);
+                                            
+                          const pdfUrl =
+                            `http://127.0.0.1:8000${response.data.pdf_file}`;
+                                            
+                          await axios.post(
                             "http://127.0.0.1:5000/open-signer",
                             {
-                              method: "POST"
+                              pdf: pdfUrl,
+                              request_id: selectedRequest.id,
                             }
-                          )
-                          .then((res) => {
-                          
-                            console.log(
-                              "Signer API Status:",
-                              res.status
-                            );
-                          
-                            return res.json();
-                          
-                          })
-                          .then((data) => {
-                          
-                            console.log(
-                              "Signer API Response:",
-                              data
-                            );
-                          
-                          })
-                          .catch((err) => {
-                          
-                            console.error(
-                              "Signer Error:",
-                              err
-                            );
-                          
-                          });
-                        
-                        }, 2000);
+                          );
+                          const currentRequestId = selectedRequest.id;
+                          const interval = setInterval(async () => {
 
+                            try {
+                            
+                              const officer = JSON.parse(localStorage.getItem("officer")!);
+                            
+                              const response = await axios.get(
+                                `${API_BASE}/officer/requests/${officer.officer_id}/`
+                              );
+                            
+                              setRequests(response.data);
+                            
+                              const stillPending = response.data.some(
+                                (r: any) => r.id === currentRequestId
+                              );
+                            
+                              if (!stillPending) {
+                              
+                                clearInterval(interval);
+                              
+                                setSelectedRequest(null);
+                              
+                                setSignedPdf(null);
+                              
+                                toast.success("Certificate signed successfully.");
+                              
+                              }
+                            
+                            } catch (error) {
+                            
+                              console.error(error);
+                            
+                            }
+                          
+                          }, 2000);
                         
-                      
                       })
                       .catch((error) => {
                       
                         console.error(error);
                       
-                        toast.error(
-                          "Unable to generate PDF"
-                        );
+                        toast.error("Unable to generate PDF");
                       
                       });
-                    
                   }}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-1.5"
                 >
@@ -602,7 +597,7 @@ export default function OfficerDashboard() {
                       "signed_pdf",
                       signedPdf
                     );
-                  
+                    
                     await axios.post(
                       `${API_BASE}/officer/request/upload-signed/${selectedRequest.id}/`,
                       formData
