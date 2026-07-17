@@ -509,13 +509,17 @@ export default function OfficerDashboard() {
                                             
                           const pdfUrl = response.data.pdf_file;
                                             
-                          await axios.post(
-                            "http://127.0.0.1:5000/open-signer",
-                            {
-                              pdf: pdfUrl,
-                              request_id: selectedRequest.id,
-                            }
-                          ); 
+                          try {
+                            await axios.post(
+                              "http://127.0.0.1:5000/open-signer",
+                              {
+                                pdf: pdfUrl,
+                                request_id: selectedRequest.id,
+                              }
+                            );
+                          } catch (err) {
+                            console.warn("Signer helper response ignored:", err);
+                          }
                           const currentRequestId = selectedRequest.id;
                           const interval = setInterval(async () => {
 
