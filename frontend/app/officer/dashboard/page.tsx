@@ -516,7 +516,7 @@ export default function OfficerDashboard() {
                               pdf: pdfUrl,
                               request_id: selectedRequest.id,
                             }
-                          );
+                          ); 
                           const currentRequestId = selectedRequest.id;
                           const interval = setInterval(async () => {
 
