@@ -507,8 +507,7 @@ export default function OfficerDashboard() {
 
                           console.log(response.data);
                                             
-                          const pdfUrl =
-                            `http://127.0.0.1:8000${response.data.pdf_file}`;
+                          const pdfUrl = response.data.pdf_file;
                                             
                           await axios.post(
                             "http://127.0.0.1:5000/open-signer",
