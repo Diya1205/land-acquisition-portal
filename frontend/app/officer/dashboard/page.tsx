@@ -6,7 +6,7 @@ import axios from "axios";
 import {
   FaEye,
   FaFilePdf,
-  FaCloudUploadAlt,
+  
   FaSignOutAlt,
   FaTimes,
   FaPhone,
@@ -19,9 +19,7 @@ export default function OfficerDashboard() {
   const router = useRouter();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [signedPdf, setSignedPdf] = useState<File | null>(null);
-  const [uploading, setUploading] =
-    useState(false);
+  
   const [selectedRequest, setSelectedRequest] =
     useState<any>(null);
 
@@ -413,74 +411,8 @@ export default function OfficerDashboard() {
 
                 </div>
 
-                {/* Upload Section */}
-                <div>
-
-                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-2">
-                    <FaCloudUploadAlt size={12} className="text-emerald-500" />
-                    Upload Signed Certificate (PDF)
-                  </h3>
-
-                  <div className="border-2 border-dashed border-gray-300 hover:border-blue-300 rounded-xl p-4 bg-gray-50 transition-colors">
-
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={(e) => {
-
-                        if (
-                          e.target.files &&
-                          e.target.files[0]
-                        ) {
-
-                          setSignedPdf(
-                            e.target.files[0]
-                          );
-
-                        }
-
-                      }}
-                      className="
-                      w-full
-                      text-sm
-                      text-black
-                      file:bg-blue-600
-                      file:text-white
-                      file:border-0
-                      file:px-3
-                      file:py-1.5
-                      file:rounded-lg
-                      file:text-sm
-                      file:font-medium
-                      file:cursor-pointer
-                      file:mr-4
-                      cursor-pointer
-                    "
-                    />
-
-                    {signedPdf && (
-
-                      <div className="mt-3 flex items-center gap-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-
-                        <FaFilePdf className="text-emerald-600 shrink-0" size={18} />
-
-                        <div className="min-w-0">
-                          <p className="text-sm text-black font-medium break-all">
-                            {signedPdf.name}
-                          </p>
-
-                          <p className="text-xs text-gray-500">
-                            {(signedPdf.size / 1024).toFixed(2)} KB
-                          </p>
-                        </div>
-
-                      </div>
-
-                    )}
-
-                  </div>
-
-                </div>
+                
+                
 
               </div>
 
@@ -513,7 +445,7 @@ export default function OfficerDashboard() {
 
                           const protocolUrl =
                             `landsigner://sign?pdf=${encodeURIComponent(fullPdfUrl)}&request_id=${selectedRequest.id}`;
-                          
+
                           window.location.href = protocolUrl;
                           const currentRequestId = selectedRequest.id;
                           const interval = setInterval(async () => {
@@ -538,7 +470,6 @@ export default function OfficerDashboard() {
 
                                 setSelectedRequest(null);
 
-                                setSignedPdf(null);
 
                                 toast.success("Certificate signed successfully.");
 
@@ -567,82 +498,7 @@ export default function OfficerDashboard() {
                     Download PDF
                   </button>
 
-                  <button
-                    disabled={uploading}
-                    onClick={async () => {
-
-                      if (uploading) {
-                        return;
-                      }
-
-                      if (!signedPdf) {
-
-                        toast.error(
-                          "Please select signed PDF first"
-                        );
-
-                        return;
-                      }
-
-                      try {
-
-                        setUploading(true);
-
-                        const formData =
-                          new FormData();
-
-                        formData.append(
-                          "signed_pdf",
-                          signedPdf
-                        );
-
-                        await axios.post(
-                          `${API_BASE}/officer/request/upload-signed/${selectedRequest.id}/`,
-                          formData
-                        );
-
-                        toast.success(
-                          "Signed PDF uploaded successfully"
-                        );
-
-                        setRequests(
-                          requests.filter(
-                            (r) =>
-                              r.id !== selectedRequest.id
-                          )
-                        );
-
-                        setSelectedRequest(null);
-
-                        setSignedPdf(null);
-
-                      } catch (error: any) {
-
-                        console.error(error);
-
-                        toast.error(
-                          error?.response?.data?.error ||
-                          "Upload failed"
-                        );
-
-                      } finally {
-
-                        setUploading(false);
-
-                      }
-
-                    }}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-1.5 text-white ${uploading
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-emerald-600 hover:bg-emerald-700"
-                      }`}
-                  >
-                    <FaCloudUploadAlt size={13} />
-
-                    {uploading
-                      ? "Uploading..."
-                      : "Upload Signed PDF"}
-                  </button>
+                  
 
                 </div>
 
