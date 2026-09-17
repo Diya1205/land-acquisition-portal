@@ -6,7 +6,7 @@ import axios from "axios";
 import {
   FaEye,
   FaFilePdf,
-  
+  FaDownload,
   FaSignOutAlt,
   FaTimes,
   FaPhone,
@@ -19,7 +19,7 @@ export default function OfficerDashboard() {
   const router = useRouter();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [selectedRequest, setSelectedRequest] =
     useState<any>(null);
 
@@ -100,20 +100,31 @@ export default function OfficerDashboard() {
             Review, Approve and Process Certificate Requests
           </p>
 
-          <button
-            onClick={() => {
+          {/* HEADER ACTIONS */}
+          <div className="absolute top-3 right-3 flex items-center gap-2">
 
-              localStorage.removeItem("officer");
+            {/* SIGNING SETUP BUTTON */}
+            <button
+              onClick={() => router.push("/officer/signing-setup")}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
+            >
+              <FaDownload size={12} />
+              Signing Setup
+            </button>
 
-              window.location.href =
-                "/officer/login";
+            {/* LOGOUT BUTTON */}
+            <button
+              onClick={() => {
+                localStorage.removeItem("officer");
+                window.location.href = "/officer/login";
+              }}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
+            >
+              <FaSignOutAlt size={12} />
+              Logout
+            </button>
 
-            }}
-            className="absolute top-3 right-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
-          >
-            <FaSignOutAlt size={12} />
-            Logout
-          </button>
+          </div>
 
         </div>
 
@@ -411,8 +422,8 @@ export default function OfficerDashboard() {
 
                 </div>
 
-                
-                
+
+
 
               </div>
 
@@ -498,7 +509,7 @@ export default function OfficerDashboard() {
                     Download PDF
                   </button>
 
-                  
+
 
                 </div>
 
