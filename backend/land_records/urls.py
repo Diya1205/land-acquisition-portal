@@ -125,4 +125,8 @@ urlpatterns = [
         "request-status/",
         request_status
     ),
+    path(
+    "acquisition-proof/submit/",
+    views.submit_acquisition_proof
+),
 ]

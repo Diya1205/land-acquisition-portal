@@ -34,7 +34,7 @@ export default function OfficerLogin() {
     try {
 
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/designations/`
+         `${API_BASE}/designations/`
       );
 
       setDesignations(response.data);
@@ -70,7 +70,7 @@ export default function OfficerLogin() {
       setLoading(true);
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/officer/login/`,
+        `${API_BASE}/officer/login/`,
         {
           designation_id: designationId,
           password

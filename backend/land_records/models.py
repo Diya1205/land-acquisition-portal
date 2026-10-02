@@ -207,7 +207,6 @@ class Nivada(models.Model):
     
 
 
-
 class OfficerMaster(models.Model):
 
     officer_id = models.IntegerField(
@@ -437,6 +436,100 @@ class CertificateRequest(models.Model):
     )
     class Meta:
         db_table = "Certificate_Request"
+
+    def __str__(self):
+        return (
+            f"{self.applicant_name} - "
+            f"{self.status}"
+        )
+
+
+class AcquisitionProofRequest(models.Model):
+
+    STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Valid", "Valid"),
+        ("Invalid", "Invalid"),
+    ]
+
+    
+  
+
+    mobile_number = models.CharField(
+        max_length=20
+    )
+
+    email = models.EmailField(
+        null=True,
+        blank=True
+    )
+
+   
+    taluka = models.CharField(
+        max_length=255
+    )
+
+    village = models.CharField(
+        max_length=255
+    )
+
+    
+
+    survey_number = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    gat_number = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    # Citizen's explanation
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # Uploaded acquisition proof
+    proof_document = models.FileField(
+        upload_to="acquisition_proofs/"
+    )
+
+    # Officer review
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Pending"
+    )
+
+    officer_remarks = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    reviewed_by = models.IntegerField(
+        null=True,
+        blank=True
+    )
+
+    reviewed_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        db_table = "Acquisition_Proof_Request"
 
     def __str__(self):
         return (

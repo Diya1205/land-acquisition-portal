@@ -19,8 +19,9 @@ from .models import (
     CertificateRequest,
     Designation,
     ScanPg,
-
+    AcquisitionProofRequest,
 )
+from .serializers import AcquisitionProofRequestSerializer
 from weasyprint import HTML
 from pdf2image import convert_from_bytes
 from io import BytesIO
@@ -1229,20 +1230,20 @@ def upload_signed_pdf(request, request_id):
 
         pdf_bytes = signed_pdf.read()
 
-        print("PDF SIZE =", len(pdf_bytes))
+        # print("PDF SIZE =", len(pdf_bytes))
 
         email.attach(
             signed_pdf.name,
             pdf_bytes,
             "application/pdf"
         )
-        print("BEFORE SEND")
+        # print("BEFORE SEND")
         result = email.send(
             fail_silently=False
         )
 
-        print("SEND RESULT =", result)
-        print("AFTER SEND")
+        # print("SEND RESULT =", result)
+        # print("AFTER SEND")
     return Response({
         "success": True,
         "message": "Signed PDF uploaded successfully.",
@@ -1449,21 +1450,39 @@ def original_record(request, record_id):
             status=404
         )
 
+    # Current image
+
     page = ScanPg.objects.filter(
         volume_no=nivada.volume_no,
         page_no=nivada.page_no
     ).first()
 
+    # All available scanned pages for this volume
+    volume_pages = list(
+        ScanPg.objects.filter(
+            volume_no=nivada.volume_no
+        )
+        .exclude(page_no__isnull=True)
+        .values_list("page_no", flat=True)
+        .distinct()
+        .order_by("page_no")
+    )
+
     return Response({
         "record_id": nivada.id,
         "volume_no": nivada.volume_no,
         "page_no": nivada.page_no,
+
         "image_available": page is not None,
+
         "image_url": (
             f"/api/original-record-image/{record_id}/"
             if page
             else None
-        )
+        ),
+
+        "volume_pages": volume_pages,
+        "total_pages": len(volume_pages),
     })
 
 @api_view(["GET"])
@@ -1481,11 +1500,37 @@ def original_record_image(request, record_id):
             status=404
         )
 
+   
+    volume_no = nivada.volume_no
+    current_page_no = nivada.page_no
+
+    
+
+    requested_page_no = request.GET.get("page_no")
+
+    if requested_page_no:
+
+        try:
+            requested_page_no = int(
+                requested_page_no
+            )
+
+        except ValueError:
+
+            return HttpResponse(
+                "Invalid page number",
+                status=400
+            )
+
+        current_page_no = requested_page_no
+
+  
+
     try:
 
         scan_page = ScanPg.objects.get(
-            volume_no=nivada.volume_no,
-            page_no=nivada.page_no
+            volume_no=volume_no,
+            page_no=current_page_no
         )
 
     except ScanPg.DoesNotExist:
@@ -1501,7 +1546,50 @@ def original_record_image(request, record_id):
     )
 
 
+@api_view(["POST"])
+def submit_acquisition_proof(request):
+    """
+    Citizen submits proof claiming that land was acquired.
 
+    This creates a separate proof request.
+    It does not modify the official land records.
+    """
+
+    proof_document = request.FILES.get("proof_document")
+
+    if not proof_document:
+        return Response(
+            {
+                "success": False,
+                "error": "Proof document is required."
+            },
+            status=400
+        )
+
+    serializer = AcquisitionProofRequestSerializer(
+        data=request.data
+    )
+
+    if serializer.is_valid():
+        proof_request = serializer.save()
+
+        return Response(
+            {
+                "success": True,
+                "message": "Acquisition proof submitted successfully.",
+                "request_id": proof_request.id,
+                "status": proof_request.status
+            },
+            status=201
+        )
+
+    return Response(
+        {
+            "success": False,
+            "errors": serializer.errors
+        },
+        status=400
+    )
 
 
 

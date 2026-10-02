@@ -26,3 +26,7 @@ frontend/node_modules/
 .env
 .env.local
 .env.production
+
+# Build artifacts
+**/build/
+**/dist/
