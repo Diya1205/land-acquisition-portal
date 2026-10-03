@@ -12,9 +12,25 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaHome,
+  FaLandmark,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
+
+/* ------------------------------------------------------------------
+   UI-only style tokens (same system as the user portal page)
+------------------------------------------------------------------ */
+const btnBase =
+  "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 text-[13px] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
+const btnPrimary = `${btnBase} bg-[#12285a] text-white shadow-sm hover:bg-[#0a1f44] focus-visible:ring-blue-700`;
+const btnSecondary = `${btnBase} border border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200 focus-visible:ring-slate-500`;
+const thCls =
+  "whitespace-nowrap border-b-2 border-[#12285a] bg-white px-4 py-3 text-left text-sm font-bold text-[#12285a]";
+const tdCls =
+  "whitespace-nowrap border-b border-slate-100 px-4 py-3 text-sm leading-6 text-slate-900";
+const detailLabel = "text-xs font-semibold text-slate-600";
+const detailValue = "mt-0.5 text-sm font-semibold leading-6 text-slate-900";
+
 export default function OfficerDashboard() {
   const router = useRouter();
   const [requests, setRequests] = useState<any[]>([]);
@@ -65,14 +81,14 @@ export default function OfficerDashboard() {
     const s = (status || "").toLowerCase();
 
     if (s.includes("approved") || s.includes("complete") || s.includes("signed")) {
-      return "bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold";
+      return "inline-block rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800";
     }
 
     if (s.includes("reject") || s.includes("denied")) {
-      return "bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-semibold";
+      return "inline-block rounded-md border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-800";
     }
 
-    return "bg-yellow-100 text-yellow-800 px-2.5 py-1 rounded-full text-xs font-semibold";
+    return "inline-block rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-900";
   };
 
   return (
@@ -81,186 +97,200 @@ export default function OfficerDashboard() {
         position="top-right"
         toastOptions={{
           duration: 4000,
+          style: {
+            borderRadius: "8px",
+            background: "#fff",
+            color: "#0f172a",
+            border: "1px solid #e2e8f0",
+            fontSize: "14px",
+            lineHeight: 1.5,
+          },
         }}
       />
-      <div className="h-screen bg-slate-100 p-3 overflow-hidden flex flex-col">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#f3f5f9] p-3 text-slate-900 lg:h-screen lg:overflow-hidden">
 
         {/* HEADER */}
-        <div className="relative mb-3 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-900 p-4 text-center text-white shadow-lg shrink-0">
+        <header className="relative mb-3 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-[#eef3fa] shadow-sm [background-image:linear-gradient(rgba(18,40,90,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(18,40,90,0.06)_1px,transparent_1px)] [background-size:26px_26px]">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-[#12285a]" />
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-3 pt-4">
 
-          <h1 className="text-3xl font-bold">
-            Officer Dashboard
-          </h1>
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#12285a] text-amber-400 shadow-sm">
+                <FaLandmark size={19} />
+              </span>
+              <div className="min-w-0 leading-snug">
+                <h1 className="text-lg font-bold text-[#12285a] sm:text-xl">
+                  Officer Dashboard
+                </h1>
+                <p className="text-sm font-medium text-slate-700">
+                  Land Acquisition Certificate Portal
+                  <span className="hidden text-slate-500 md:inline">
+                    {" "}— Review, Approve and Process Certificate Requests
+                  </span>
+                </p>
+              </div>
+            </div>
 
-          <p className="mt-1 text-sm">
-            Land Acquisition Certificate Portal
-          </p>
+            {/* HEADER ACTIONS */}
+            <div className="flex shrink-0 items-center gap-2">
 
-          <p className="text-xs opacity-90">
-            Review, Approve and Process Certificate Requests
-          </p>
+              {/* SIGNING SETUP BUTTON */}
+              <button
+                onClick={() => router.push("/officer/signing-setup")}
+                className={`${btnSecondary} bg-white`}
+              >
+                <FaDownload size={12} />
+                Signing Setup
+              </button>
 
-          {/* HEADER ACTIONS */}
-          <div className="absolute top-3 right-3 flex items-center gap-2">
+              {/* LOGOUT BUTTON */}
+              <button
+                onClick={() => {
+                  localStorage.removeItem("officer");
+                  window.location.href = "/officer/login";
+                }}
+                className={`${btnSecondary} bg-white`}
+              >
+                <FaSignOutAlt size={12} />
+                Logout
+              </button>
 
-            {/* SIGNING SETUP BUTTON */}
-            <button
-              onClick={() => router.push("/officer/signing-setup")}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
-            >
-              <FaDownload size={12} />
-              Signing Setup
-            </button>
-
-            {/* LOGOUT BUTTON */}
-            <button
-              onClick={() => {
-                localStorage.removeItem("officer");
-                window.location.href = "/officer/login";
-              }}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
-            >
-              <FaSignOutAlt size={12} />
-              Logout
-            </button>
+            </div>
 
           </div>
-
-        </div>
+        </header>
 
         {/* MAIN CARD */}
-        <div className="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-200 flex-1 flex flex-col min-h-0">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
 
-          <div className="px-4 pt-4 pb-2 flex items-center justify-between shrink-0">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-3">
 
-            <h2 className="text-lg font-semibold text-slate-800">
+            <h2 className="text-lg font-bold text-[#12285a]">
               Pending Requests
             </h2>
 
             {!loading && (
-              <span className="text-xs text-gray-500 font-medium">
+              <span className="rounded-md bg-slate-100 px-2.5 py-1 text-sm font-semibold text-slate-800">
                 {requests.length} request{requests.length === 1 ? "" : "s"}
               </span>
             )}
 
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-4 min-h-0">
+          <div className="max-h-[75vh] min-h-[240px] flex-1 overflow-auto lg:max-h-none lg:min-h-0">
 
             {loading ? (
 
-              <div className="flex items-center justify-center h-full text-sm text-gray-500">
-                Loading Requests...
+              <div className="flex h-48 flex-col items-center justify-center gap-2 px-4 text-center text-base text-slate-600">
+                <span className="h-7 w-7 animate-spin rounded-full border-2 border-slate-300 border-t-[#12285a]" />
+                <span className="font-medium">Loading Requests...</span>
               </div>
 
             ) : requests.length === 0 ? (
 
-              <div className="flex items-center justify-center h-full text-sm text-gray-500">
-                No Requests Found
+              <div className="flex h-48 flex-col items-center justify-center gap-2 px-4 text-center text-base text-slate-600">
+                <FaFilePdf size={22} className="text-slate-400" />
+                <span className="font-medium">No Requests Found</span>
               </div>
 
             ) : (
 
-              <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+              <table className="w-full border-collapse bg-white">
 
-                <table className="w-full border-collapse bg-white">
+                <thead className="sticky top-0 z-10">
 
-                  <thead className="sticky top-0 z-10">
+                  <tr>
 
-                    <tr className="bg-gray-200">
+                    <th className={thCls}>
+                      Request ID
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Request ID
-                      </th>
+                    <th className={thCls}>
+                      Applicant
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Applicant
-                      </th>
+                    <th className={thCls}>
+                      Taluka
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Taluka
-                      </th>
+                    <th className={thCls}>
+                      Village
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Village
-                      </th>
+                    <th className={thCls}>
+                      Mobile
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Mobile
-                      </th>
+                    <th className={thCls}>
+                      Status
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-left whitespace-nowrap">
-                        Status
-                      </th>
+                    <th className={`${thCls} text-center`}>
+                      Action
+                    </th>
 
-                      <th className="px-3 py-2 bg-slate-800 text-white text-sm font-semibold text-center whitespace-nowrap">
-                        Action
-                      </th>
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {requests.map((request) => (
+
+                    <tr
+                      key={request.id}
+                      className="bg-white transition-colors hover:bg-slate-50"
+                    >
+
+                      <td className={tdCls}>
+                        {request.id}
+                      </td>
+
+                      <td className={`${tdCls} font-medium`}>
+                        {request.applicant_name}
+                      </td>
+
+                      <td className={`${tdCls} font-medium`}>
+                        {request.taluka}
+                      </td>
+
+                      <td className={`${tdCls} font-medium`}>
+                        {request.village}
+                      </td>
+
+                      <td className={`${tdCls} font-medium`}>
+                        {request.mobile_number}
+                      </td>
+
+                      <td className={tdCls}>
+
+                        <span className={getStatusBadgeClasses(request.status)}>
+                          {request.status}
+                        </span>
+
+                      </td>
+
+                      <td className={`${tdCls} text-center`}>
+
+                        <button
+                          onClick={() => {
+                            setSelectedRequest(request);
+                          }}
+                          className={btnPrimary}
+                        >
+                          <FaEye size={11} />
+                          View
+                        </button>
+
+                      </td>
 
                     </tr>
 
-                  </thead>
+                  ))}
 
-                  <tbody>
+                </tbody>
 
-                    {requests.map((request) => (
-
-                      <tr
-                        key={request.id}
-                        className="bg-white hover:bg-gray-50"
-                      >
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {request.id}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {request.applicant_name}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {request.taluka}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {request.village}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {request.mobile_number}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm whitespace-nowrap">
-
-                          <span className={getStatusBadgeClasses(request.status)}>
-                            {request.status}
-                          </span>
-
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-center whitespace-nowrap">
-
-                          <button
-                            onClick={() => {
-                              setSelectedRequest(request);
-                            }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1.5"
-                          >
-                            <FaEye size={11} />
-                            View
-                          </button>
-
-                        </td>
-
-                      </tr>
-
-                    ))}
-
-                  </tbody>
-
-                </table>
-
-              </div>
+              </table>
 
             )}
 
@@ -270,48 +300,49 @@ export default function OfficerDashboard() {
 
         {selectedRequest && (
 
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
 
-            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col">
+            <div className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
 
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 sticky top-0 bg-white z-10 rounded-t-2xl shrink-0">
+              <div className="flex shrink-0 items-center justify-between border-b border-l-4 border-slate-200 border-l-amber-500 px-5 py-4">
 
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">
+                  <h2 className="text-lg font-bold text-[#12285a]">
                     Certificate Request Details
                   </h2>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="mt-0.5 text-sm text-slate-600">
                     Request #{selectedRequest.id}
                   </p>
                 </div>
 
                 <button
                   onClick={() => setSelectedRequest(null)}
-                  className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
+                  aria-label="Close"
+                  className="rounded-md p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
                 >
                   <FaTimes size={16} />
                 </button>
 
               </div>
 
-              <div className="p-5 space-y-4">
+              <div className="flex-1 space-y-4 overflow-y-auto p-5">
 
                 {/* Summary strip */}
-                <div className="flex flex-wrap items-center gap-3 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+                <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 border-l-4 border-l-[#12285a] bg-slate-50 px-4 py-3">
 
-                  <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm shrink-0">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#12285a] text-sm font-bold text-amber-400">
                     {selectedRequest.applicant_name
                       ? selectedRequest.applicant_name.charAt(0).toUpperCase()
                       : "?"}
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-base font-semibold leading-6 text-slate-900">
                       {selectedRequest.applicant_name}
                     </p>
-                    <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-0.5">
-                      <FaPhone size={10} />
+                    <p className="mt-0.5 flex items-center gap-1.5 text-sm text-slate-700">
+                      <FaPhone size={11} className="text-slate-500" />
                       {selectedRequest.mobile_number}
                     </p>
                   </div>
@@ -325,49 +356,49 @@ export default function OfficerDashboard() {
                 </div>
 
                 {/* Land & Survey Details */}
-                <div>
+                <div className="overflow-hidden rounded-lg border border-slate-200">
 
-                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-2">
-                    <FaMapMarkerAlt size={11} className="text-blue-500" />
+                  <h3 className="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-[#12285a]">
+                    <FaMapMarkerAlt size={12} className="text-amber-600" />
                     Land &amp; Survey Details
                   </h3>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3 border border-gray-200 rounded-xl p-4">
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-4 p-4 sm:grid-cols-3">
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">District</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.district}</p>
+                      <p className={detailLabel}>District</p>
+                      <p className={detailValue}>{selectedRequest.district}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Taluka</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.taluka}</p>
+                      <p className={detailLabel}>Taluka</p>
+                      <p className={detailValue}>{selectedRequest.taluka}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Village</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.village}</p>
+                      <p className={detailLabel}>Village</p>
+                      <p className={detailValue}>{selectedRequest.village}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Project</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.project_name}</p>
+                      <p className={detailLabel}>Project</p>
+                      <p className={detailValue}>{selectedRequest.project_name}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Nivada Name</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.nivada_name}</p>
+                      <p className={detailLabel}>Nivada Name</p>
+                      <p className={detailValue}>{selectedRequest.nivada_name}</p>
                     </div>
 
                     {
                       selectedRequest.survey_number &&
                       selectedRequest.survey_number !== "-" && (
                         <div>
-                          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                          <p className={detailLabel}>
                             Survey Number
                           </p>
 
-                          <p className="text-sm font-semibold text-slate-800 mt-0.5">
+                          <p className={detailValue}>
                             {selectedRequest.survey_number}
                           </p>
                         </div>
@@ -378,11 +409,11 @@ export default function OfficerDashboard() {
                       selectedRequest.gat_number &&
                       selectedRequest.gat_number !== "-" && (
                         <div>
-                          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+                          <p className={detailLabel}>
                             Gat Number
                           </p>
 
-                          <p className="text-sm font-semibold text-slate-800 mt-0.5">
+                          <p className={detailValue}>
                             {selectedRequest.gat_number}
                           </p>
                         </div>
@@ -394,45 +425,42 @@ export default function OfficerDashboard() {
                 </div>
 
                 {/* Applicant Address */}
-                <div>
+                <div className="overflow-hidden rounded-lg border border-slate-200">
 
-                  <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1.5 mb-2">
-                    <FaHome size={11} className="text-indigo-500" />
+                  <h3 className="flex items-center gap-2 border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-[#12285a]">
+                    <FaHome size={12} className="text-amber-600" />
                     Applicant Address
                   </h3>
 
-                  <div className="grid grid-cols-3 gap-3 border border-gray-200 rounded-xl p-4">
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-4 p-4 sm:grid-cols-3">
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">District</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.address_district}</p>
+                      <p className={detailLabel}>District</p>
+                      <p className={detailValue}>{selectedRequest.address_district}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Taluka</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.address_taluka}</p>
+                      <p className={detailLabel}>Taluka</p>
+                      <p className={detailValue}>{selectedRequest.address_taluka}</p>
                     </div>
 
                     <div>
-                      <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">Village</p>
-                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{selectedRequest.address_village}</p>
+                      <p className={detailLabel}>Village</p>
+                      <p className={detailValue}>{selectedRequest.address_village}</p>
                     </div>
 
                   </div>
 
                 </div>
 
-
-
-
               </div>
 
               {/* Footer Actions */}
-              <div className="flex items-center justify-between gap-2 px-5 py-4 border-t border-gray-200 sticky bottom-0 bg-white rounded-b-2xl shrink-0">
+              <div className="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
 
                 <button
                   onClick={() => setSelectedRequest(null)}
-                  className="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium"
+                  className={`${btnSecondary} bg-white`}
                 >
                   Close
                 </button>
@@ -503,13 +531,11 @@ export default function OfficerDashboard() {
 
                         });
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-1.5"
+                    className={btnPrimary}
                   >
                     <FaFilePdf size={13} />
                     Download PDF
                   </button>
-
-
 
                 </div>
 

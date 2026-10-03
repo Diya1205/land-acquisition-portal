@@ -17,9 +17,31 @@ import {
   FaFilter,
   FaPlus,
   FaMinus,
+  FaLandmark,
+  FaListAlt,
+  FaUndo,
 } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
+
+/* ------------------------------------------------------------------
+   UI-only style tokens (presentation only, no logic)
+------------------------------------------------------------------ */
+const btnBase =
+  "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md px-3 text-[13px] font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
+const btnPrimary = `${btnBase} bg-[#12285a] text-white shadow-sm hover:bg-[#0a1f44] focus-visible:ring-blue-700`;
+const btnAccent = `${btnBase} bg-amber-500 text-[#0a1f44] shadow-sm hover:bg-amber-400 focus-visible:ring-amber-600`;
+const btnOutline = `${btnBase} border border-[#12285a] bg-white text-[#12285a] hover:bg-blue-50 focus-visible:ring-blue-700 disabled:border-slate-300 disabled:text-slate-500 disabled:hover:bg-white`;
+const btnSecondary = `${btnBase} border border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200 focus-visible:ring-slate-500`;
+const iconBtn =
+  "flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40";
+const fieldLabel = "mb-1 block text-sm font-semibold text-slate-700";
+const inputCls =
+  "h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-500 transition focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600/25";
+const thCls =
+  "whitespace-nowrap border-b-2 border-[#12285a] bg-white px-4 py-3 text-left text-sm font-bold text-[#12285a]";
+const tdCls =
+  "whitespace-nowrap border-b border-slate-100 px-4 py-3 text-sm leading-6 text-slate-900";
 
 export default function Home() {
   const router = useRouter();
@@ -534,55 +556,73 @@ export default function Home() {
 
   }, [page]);
 
+  // Presentation-only react-select theme
   const customSelectStyles = {
     control: (provided: any, state: any) => ({
       ...provided,
-      minHeight: "34px",
-      borderRadius: "9px",
+      minHeight: "40px",
+      borderRadius: "6px",
+      backgroundColor: state.isDisabled ? "#f1f5f9" : "#ffffff",
       border: state.isFocused
-        ? "2px solid #2563eb"
-        : "2px solid #d1d5db",
-      boxShadow: state.isFocused ? "0 0 0 3px rgba(37,99,235,0.12)" : "none",
+        ? "1px solid #1d4ed8"
+        : "1px solid #cbd5e1",
+      boxShadow: state.isFocused ? "0 0 0 3px rgba(37,99,235,0.2)" : "none",
       "&:hover": {
-        border: "2px solid #2563eb",
+        border: "1px solid #1d4ed8",
       },
-      fontSize: "13px",
+      fontSize: "14px",
       transition: "all 0.15s ease",
     }),
     valueContainer: (provided: any) => ({
       ...provided,
-      padding: "0 8px",
+      padding: "0 10px",
     }),
-
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: "#0f172a",
+      fontWeight: 500,
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: "#0f172a",
+    }),
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
     indicatorsContainer: (provided: any) => ({
       ...provided,
-      height: "34px",
+      height: "40px",
     }),
     menu: (provided: any) => ({
       ...provided,
       zIndex: 9999,
       borderRadius: "10px",
       overflow: "hidden",
-      boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
+      border: "1px solid #e2e8f0",
+      boxShadow: "0 12px 28px -8px rgba(10,31,68,0.25)",
     }),
-
+    menuPortal: (provided: any) => ({
+      ...provided,
+      zIndex: 9999,
+    }),
     option: (provided: any, state: any) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#2563eb"
+        ? "#0f2a5f"
         : state.isFocused
           ? "#eff6ff"
           : "white",
-      color: state.isSelected ? "white" : "black",
-      padding: 8,
+      color: state.isSelected ? "white" : "#0f172a",
+      padding: "9px 12px",
       cursor: "pointer",
-      fontSize: "13px",
+      fontSize: "14px",
+      lineHeight: 1.5,
     }),
 
     placeholder: (provided: any) => ({
       ...provided,
-      color: "#9ca3af",
-      fontSize: "13px",
+      color: "#64748b",
+      fontSize: "14px",
     }),
   };
   const fetchNivadaNames = async () => {
@@ -742,62 +782,77 @@ export default function Home() {
         toastOptions={{
           duration: 4000,
           style: {
-            borderRadius: "12px",
+            borderRadius: "8px",
             background: "#fff",
-            color: "#111827",
+            color: "#0f172a",
+            border: "1px solid #e2e8f0",
+            fontSize: "14px",
+            lineHeight: 1.5,
           },
         }}
       />
-      <div className="h-screen bg-slate-100 p-3 overflow-hidden flex flex-col">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-[#f3f5f9] p-3 text-slate-900 lg:h-screen lg:overflow-hidden">
 
         {/* HEADER */}
-        <div className="relative mb-3 rounded-2xl bg-gradient-to-r from-blue-700 to-blue-900 p-3.5 text-center text-white shadow-lg shrink-0">
-          <h1 className="text-2xl md:text-3xl font-bold">
-            Welcome to Collector Office, Ahilyanagar
-          </h1>
+        <header className="relative mb-3 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-[#eef3fa] shadow-sm [background-image:linear-gradient(rgba(18,40,90,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(18,40,90,0.06)_1px,transparent_1px)] [background-size:26px_26px]">
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-[#12285a]" />
+          <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#12285a] text-amber-400 shadow-sm">
+                <FaLandmark size={19} />
+              </span>
+              <div className="min-w-0 leading-snug">
+                <h1 className="text-lg font-bold text-[#12285a] sm:text-xl">
+                  Welcome to Collector Office, Ahilyanagar
+                </h1>
+                <p className="text-sm font-medium text-slate-700">
+                  Land Acquisition Certificate Portal
+                  <span className="hidden text-slate-500 md:inline">
+                    {" "}— Search Land Acquisition Records and Generate Certificates Online
+                  </span>
+                </p>
+              </div>
+            </div>
 
-          <p className="mt-1 text-sm">
-            Land Acquisition Certificate Portal
-          </p>
+            <button
+              onClick={() => {
 
-          <p className="text-xs opacity-90">
-            Search Land Acquisition Records and Generate Certificates Online
-          </p>
-          <button
-            onClick={() => {
+                localStorage.removeItem(
+                  "mobile_number"
+                );
 
-              localStorage.removeItem(
-                "mobile_number"
-              );
+                router.push("/");
 
-              router.push("/");
-
-            }}
-            className="absolute top-3 right-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5"
-          >
-            <FaSignOutAlt size={12} />
-            Logout
-          </button>
-        </div>
+              }}
+              className={`${btnSecondary} shrink-0 bg-white`}
+            >
+              <FaSignOutAlt size={13} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
+          </div>
+        </header>
 
         {/* MAIN CARD */}
-        <div className="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-200 flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0">
+        <div className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:grid-cols-12">
 
-          {/* LEFT FILTER SECTION — non-scrollable, fits on one screen */}
-          <div className="lg:col-span-2 border-r border-gray-200 bg-gray-50 flex flex-col min-h-0 overflow-hidden">
+          {/* LEFT FILTER SECTION */}
+          <aside className="flex min-h-0 flex-col border-b border-slate-200 bg-slate-50 lg:col-span-3 lg:border-b-0 lg:border-r">
 
-            <div className="px-3 pt-3 pb-1.5 shrink-0">
-              <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500 flex items-center gap-1.5">
-                <FaFilter size={10} className="text-blue-600" />
+            <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 px-4 py-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#12285a] text-white">
+                <FaFilter size={11} />
+              </span>
+              <h2 className="text-base font-bold text-[#12285a]">
                 Land Search
               </h2>
-
             </div>
-            <div className="flex-1 px-3 pb-3 min-h-0 flex flex-col justify-between overflow-y-auto pr-1">
 
-              <div className="space-y-1.5">
+            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-3">
 
+              <div>
+                <label className={fieldLabel}>District</label>
                 <Select
+                  aria-label="District"
                   isClearable={false}
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -825,10 +880,14 @@ export default function Home() {
                   }}
                   placeholder="Select District"
                   isSearchable={false}
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
 
+              <div>
+                <label className={fieldLabel}>Taluka</label>
                 <Select
+                  aria-label="Taluka"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -859,10 +918,14 @@ export default function Home() {
                   isSearchable
                   isDisabled={!district}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
 
+              <div>
+                <label className={fieldLabel}>Village</label>
                 <Select
+                  aria-label="Village"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -894,9 +957,14 @@ export default function Home() {
                   isSearchable
                   isDisabled={!taluka}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
+
+              <div>
+                <label className={fieldLabel}>Name</label>
                 <Select
+                  aria-label="Name"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -930,9 +998,14 @@ export default function Home() {
 
                   isDisabled={!district}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
+
+              <div>
+                <label className={fieldLabel}>Project</label>
                 <Select
+                  aria-label="Project"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -959,10 +1032,16 @@ export default function Home() {
                   isSearchable
                   isDisabled={!district}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
 
+
+              <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={fieldLabel}>Survey Number</label>
                 <Select
+                  aria-label="Survey Number"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -989,10 +1068,14 @@ export default function Home() {
                   isSearchable
                   isDisabled={!district}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
+              </div>
 
+              <div>
+                <label className={fieldLabel}>Gat Number</label>
                 <Select
+                  aria-label="Gat Number"
                   isClearable
                   noOptionsMessage={() => "No results found"}
                   styles={customSelectStyles}
@@ -1018,19 +1101,22 @@ export default function Home() {
                   isSearchable
                   isDisabled={!district}
 
-                  className="text-black"
+                  className="text-slate-900"
                 />
-
+              </div>
               </div>
 
-              <div className="space-y-1.5 pt-1.5">
+            </div>
 
+            <div className="shrink-0 space-y-2 border-t border-slate-200 bg-slate-50 p-3">
+
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   disabled={loading}
                   onClick={searchRecords}
-                  className="w-full bg-blue-600 text-white py-1.5 rounded-lg flex items-center justify-center gap-1.5 hover:bg-blue-700 disabled:bg-gray-400 font-medium text-xs shadow-sm"
+                  className={`${btnPrimary} w-full`}
                 >
-                  <FaSearch size={10} />
+                  <FaSearch size={11} />
                   {loading ? "Searching..." : "Search"}
                 </button>
 
@@ -1050,70 +1136,23 @@ export default function Home() {
 
                     setRecords([]);
                   }}
-                  className="w-full bg-white border border-gray-300 text-gray-600 py-1.5 rounded-lg hover:bg-gray-100 font-medium text-xs"
+                  className={`${btnSecondary} w-full`}
                 >
+                  <FaUndo size={10} />
                   Clear Filters
                 </button>
+              </div>
 
-                <div className="h-px bg-gray-200" />
-
+              <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
                 <button
                   disabled={!selectedRecord}
                   onClick={() =>
                     handleViewOriginalRecord(selectedRecord.id)
                   }
-                  className="w-full bg-white border-2 border-blue-600 text-blue-700 py-1.5 rounded-lg hover:bg-blue-50 disabled:border-gray-200 disabled:text-gray-400 font-medium text-xs flex items-center justify-center gap-1.5"
+                  className={`${btnOutline} w-full`}
                 >
-                  <FaImage size={10} />
+                  <FaImage size={12} />
                   View Original
-                </button>
-
-                <button
-                  disabled={!selectedRecord}
-                  onClick={() => {
-
-                    if (!selectedRecord) {
-                      alert("Please select one record");
-                      return;
-                    }
-
-                    const lastRequest = JSON.parse(
-                      localStorage.getItem("last_request") || "null"
-                    );
-
-                    if (lastRequest) {
-
-                      setApplicantName(
-                        lastRequest.applicant_name || ""
-                      );
-                      setMobileNumber(
-                        lastRequest.mobile_number || ""
-                      );
-                      setEmail(
-                        lastRequest.email || ""
-                      );
-
-                      setAddressDistrict(
-                        lastRequest.address_district || ""
-                      );
-
-                      setAddressTaluka(
-                        lastRequest.address_taluka || ""
-                      );
-
-                      setAddressVillage(
-                        lastRequest.address_village || ""
-                      );
-                    }
-
-                    setActionType("request");
-                    setShowReportForm(true);
-
-                  }}
-                  className="w-full bg-emerald-600 text-white py-1.5 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 font-medium text-xs flex items-center justify-center gap-1.5 shadow-sm"
-                >
-                  <FaFileAlt size={10} />
-                  Request Certificate
                 </button>
 
                 <button
@@ -1158,372 +1197,419 @@ export default function Home() {
                     setShowReportForm(true);
 
                   }}
-                  className="w-full bg-red-600 text-white py-1.5 rounded-lg hover:bg-red-700 disabled:bg-gray-300 font-medium text-xs flex items-center justify-center gap-1.5 shadow-sm"
+                  className={`${btnOutline} w-full`}
                 >
-                  <FaFileInvoice size={10} />
+                  <FaFileInvoice size={12} />
                   Preview Certificate
                 </button>
-                <button
-                  onClick={() => router.push("/user/requests")}
-                  className="w-full bg-indigo-600 text-white py-1.5 rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 font-medium text-xs flex items-center justify-center gap-1.5 shadow-sm"
-                >
-                  Requests Status
-                </button>
               </div>
+
+              <button
+                disabled={!selectedRecord}
+                onClick={() => {
+
+                    if (!selectedRecord) {
+                      alert("Please select one record");
+                      return;
+                    }
+
+                    const lastRequest = JSON.parse(
+                      localStorage.getItem("last_request") || "null"
+                    );
+
+                    if (lastRequest) {
+
+                      setApplicantName(
+                        lastRequest.applicant_name || ""
+                      );
+                      setMobileNumber(
+                        lastRequest.mobile_number || ""
+                      );
+                      setEmail(
+                        lastRequest.email || ""
+                      );
+
+                      setAddressDistrict(
+                        lastRequest.address_district || ""
+                      );
+
+                      setAddressTaluka(
+                        lastRequest.address_taluka || ""
+                      );
+
+                      setAddressVillage(
+                        lastRequest.address_village || ""
+                      );
+                    }
+
+                    setActionType("request");
+                    setShowReportForm(true);
+
+                  }}
+                className={`${btnAccent} w-full`}
+              >
+                <FaFileAlt size={12} />
+                Request Certificate
+              </button>
+
+              <button
+                onClick={() => router.push("/user/requests")}
+                className={`${btnSecondary} w-full`}
+              >
+                <FaListAlt size={12} />
+                Requests Status
+              </button>
             </div>
-          </div>
+          </aside>
 
           {/* RIGHT TABLE SECTION */}
-          <div className="lg:col-span-10 flex flex-col min-h-0 bg-white">
+          <section className="flex min-h-0 flex-col bg-white lg:col-span-9">
 
-            <div className="px-4 pt-3.5 pb-2 flex items-center justify-between shrink-0">
-              <h2 className="text-lg font-semibold text-slate-800">
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-3">
+              <h2 className="text-lg font-bold text-[#12285a]">
                 Search Records
               </h2>
-              {hasSearched && (
-                <span className="text-xs text-gray-500 font-medium">
-                  {totalCount} record{totalCount === 1 ? "" : "s"} found
-                </span>
-              )}
-            </div>
-
-            <div className="flex-1 overflow-y-auto px-4 pb-3 min-h-0">
-
-              <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-                <table className="w-full border-collapse bg-white">
-                  <thead className="sticky top-0 z-10">
-                    <tr>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-center w-14">
-                        Select
-                      </th>
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        ID
-                      </th>
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        District
-                      </th>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Taluka
-                      </th>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Village
-                      </th>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Project
-                      </th>
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Nivada Name
-                      </th>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Survey No
-                      </th>
-
-                      <th className="px-3 py-2 bg-slate-800 text-white text-xs font-semibold uppercase tracking-wide text-left">
-                        Gat No
-                      </th>
-
-                    </tr>
-                  </thead>
-
-                  <tbody>
-
-                    {records.map((record, index) => (
-                      <tr
-                        key={index}
-                        className={
-                          selectedRecord?.id === record.id
-                            ? "bg-blue-50 hover:bg-blue-50"
-                            : "bg-white hover:bg-gray-50"
-                        }
-                      >
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-center">
-
-                          <input
-                            type="radio"
-                            name="selectedRecord"
-                            checked={selectedRecord?.id === record.id}
-                            onChange={() => setSelectedRecord(record)}
-                            className="w-4 h-4 accent-blue-600 cursor-pointer"
-                          />
-
-                        </td>
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black whitespace-nowrap">
-                          {record.id}
-                        </td>
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.district}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.taluka}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.village}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.project_name}
-                        </td>
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.Nvd_Name || "-"}
-                        </td>
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.survey_number || "-"}
-                        </td>
-
-                        <td className="px-3 py-2 border-b border-gray-100 text-sm text-black font-medium whitespace-nowrap">
-                          {record.gat_number || "-"}
-                        </td>
-
-                      </tr>
-                    ))}
-
-                  </tbody>
-                </table>
-                {records.length === 0 && (
-                  <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
-                    {hasSearched ? "No records found" : "Use the filters and click Search to find records"}
-                  </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {selectedRecord && (
+                  <span className="rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-sm font-semibold text-[#12285a]">
+                    Selected ID {selectedRecord.id}
+                  </span>
+                )}
+                {hasSearched && (
+                  <span className="rounded-md bg-slate-100 px-2.5 py-1 text-sm font-semibold text-slate-800">
+                    {totalCount} record{totalCount === 1 ? "" : "s"} found
+                  </span>
                 )}
               </div>
             </div>
 
+            <div className="max-h-[70vh] min-h-[240px] flex-1 overflow-auto lg:max-h-none lg:min-h-0">
+              <table className="w-full border-collapse bg-white">
+                <thead className="sticky top-0 z-10">
+                  <tr>
+                    <th className={`${thCls} w-16 text-center`}>Select</th>
+                    <th className={thCls}>ID</th>
+                    <th className={thCls}>District</th>
+                    <th className={thCls}>Taluka</th>
+                    <th className={thCls}>Village</th>
+                    <th className={thCls}>Project</th>
+                    <th className={thCls}>Nivada Name</th>
+                    <th className={thCls}>Survey No</th>
+                    <th className={thCls}>Gat No</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  {records.map((record, index) => (
+                    <tr
+                      key={index}
+                      className={
+                        selectedRecord?.id === record.id
+                          ? "bg-amber-50 shadow-[inset_4px_0_0_#f59e0b]"
+                          : "bg-white transition-colors hover:bg-slate-50"
+                      }
+                    >
+                      <td className={`${tdCls} text-center`}>
+
+                        <input
+                          type="radio"
+                          name="selectedRecord"
+                          aria-label={`Select record ${record.id}`}
+                          checked={selectedRecord?.id === record.id}
+                          onChange={() => setSelectedRecord(record)}
+                          className="h-4 w-4 cursor-pointer accent-[#12285a] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                        />
+
+                      </td>
+                      <td className={tdCls}>{record.id}</td>
+                      <td className={`${tdCls} font-medium`}>{record.district}</td>
+                      <td className={`${tdCls} font-medium`}>{record.taluka}</td>
+                      <td className={`${tdCls} font-medium`}>{record.village}</td>
+                      <td className={`${tdCls} font-medium`}>{record.project_name}</td>
+                      <td className={`${tdCls} font-medium`}>{record.Nvd_Name || "-"}</td>
+                      <td className={`${tdCls} font-medium`}>{record.survey_number || "-"}</td>
+                      <td className={`${tdCls} font-medium`}>{record.gat_number || "-"}</td>
+                    </tr>
+                  ))}
+
+                </tbody>
+              </table>
+
+              {records.length === 0 && (
+                <div className="flex h-48 flex-col items-center justify-center gap-2 px-4 text-center text-base text-slate-600">
+                  {loading ? (
+                    <>
+                      <span className="h-7 w-7 animate-spin rounded-full border-2 border-slate-300 border-t-[#12285a]" />
+                      <span className="font-medium">Searching records...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaSearch size={22} className="text-slate-400" />
+                      <span className="font-medium">
+                        {hasSearched ? "No records found" : "Use the filters and click Search to find records"}
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* PAGINATION BAR */}
             {hasSearched && (
-              <div className="shrink-0 border-t border-gray-200 bg-gray-50 px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3">
 
                 <div className="flex items-center gap-1.5">
-
                   <button
                     disabled={page === 1}
                     onClick={() => setPage(1)}
                     title="First page"
-                    className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 text-slate-600 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    aria-label="First page"
+                    className={iconBtn}
                   >
-                    <FaAngleDoubleLeft size={11} />
+                    <FaAngleDoubleLeft size={12} />
                   </button>
 
                   <button
                     disabled={!hasPrevious}
                     onClick={() => setPage(page - 1)}
                     title="Previous page"
-                    className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 text-slate-600 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    aria-label="Previous page"
+                    className={iconBtn}
                   >
-                    <FaAngleLeft size={11} />
+                    <FaAngleLeft size={12} />
                   </button>
-
                 </div>
 
-                <div className="flex items-center gap-2 text-xs sm:text-sm">
-                  <span className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-slate-700 font-semibold">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-semibold text-[#12285a]">
                     Page {page} of {totalPages || 1}
                   </span>
-                  <span className="text-gray-400 hidden sm:inline">•</span>
-                  <span className="text-gray-500 font-medium hidden sm:inline">
+                  <span className="hidden text-slate-400 sm:inline">•</span>
+                  <span className="hidden font-medium text-slate-700 sm:inline">
                     {totalCount} total records
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5">
-
                   <button
                     disabled={!hasNext}
                     onClick={() => setPage(page + 1)}
                     title="Next page"
-                    className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 text-slate-600 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    aria-label="Next page"
+                    className={iconBtn}
                   >
-                    <FaAngleRight size={11} />
+                    <FaAngleRight size={12} />
                   </button>
 
                   <button
                     disabled={page === totalPages}
                     onClick={() => setPage(totalPages)}
                     title="Last page"
-                    className="w-8 h-8 flex items-center justify-center bg-white border border-gray-300 text-slate-600 rounded-lg hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-xs"
+                    aria-label="Last page"
+                    className={iconBtn}
                   >
-                    <FaAngleDoubleRight size={11} />
+                    <FaAngleDoubleRight size={12} />
                   </button>
-
                 </div>
 
               </div>
             )}
 
-          </div>
+          </section>
 
         </div>
 
+        {/* APPLICANT DETAILS */}
         {showReportForm && (
 
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
 
-            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col">
+            <div className="flex max-h-[92vh] w-full max-w-md flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
 
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 sticky top-0 bg-white z-10 rounded-t-2xl shrink-0">
-                <h2 className="text-lg font-bold text-slate-900">
+              <div className="flex shrink-0 items-center justify-between border-b border-slate-200 border-l-4 border-l-amber-500 px-5 py-4">
+                <h2 className="text-lg font-bold text-[#12285a]">
                   Applicant Details
                 </h2>
 
                 <button
                   onClick={() => setShowReportForm(false)}
-                  className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
+                  aria-label="Close"
+                  className="rounded-md p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
                 >
                   <FaTimes size={16} />
                 </button>
               </div>
 
-              <div className="p-5 space-y-3">
+              <div className="flex-1 space-y-4 overflow-y-auto p-5 pb-28">
 
-                <input
-                  type="text"
-                  placeholder="Applicant Name"
-                  value={applicantName}
-                  onChange={(e) => setApplicantName(e.target.value)}
-                  className="w-full border-2 border-gray-200 p-2.5 rounded-xl text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Mobile Number"
-                  value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  className="w-full border-2 border-gray-200 p-2.5 rounded-xl text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                />
-                {actionType === "request" && (
+                <div>
+                  <label className={fieldLabel}>Applicant Name</label>
                   <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border-2 border-gray-200 p-2.5 rounded-xl text-sm text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    type="text"
+                    placeholder="Applicant Name"
+                    value={applicantName}
+                    onChange={(e) => setApplicantName(e.target.value)}
+                    className={inputCls}
                   />
+                </div>
+
+                <div>
+                  <label className={fieldLabel}>Mobile Number</label>
+                  <input
+                    type="text"
+                    placeholder="Mobile Number"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    className={inputCls}
+                  />
+                </div>
+                {actionType === "request" && (
+                  <div>
+                    <label className={fieldLabel}>Email Address</label>
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={inputCls}
+                    />
+                  </div>
                 )}
-                <Select
-                  isClearable
-                  noOptionsMessage={() => "No results found"}
-                  styles={customSelectStyles}
 
-                  options={districts.map((d) => ({
-                    value: d,
-                    label: d,
-                  }))}
+                <div>
+                  <label className={fieldLabel}>District</label>
+                  <Select
+                    aria-label="Address District"
+                    isClearable
+                    noOptionsMessage={() => "No results found"}
+                    styles={customSelectStyles}
 
-                  value={
-                    addressDistrict
-                      ? {
-                        value: addressDistrict,
-                        label: addressDistrict,
-                      }
-                      : null
-                  }
+                    options={districts.map((d) => ({
+                      value: d,
+                      label: d,
+                    }))}
 
-                  onChange={(selectedOption) => {
+                    value={
+                      addressDistrict
+                        ? {
+                          value: addressDistrict,
+                          label: addressDistrict,
+                        }
+                        : null
+                    }
 
-                    setAddressDistrict(
-                      selectedOption?.value || ""
-                    );
+                    onChange={(selectedOption) => {
 
-                    setAddressTaluka("");
-                    setAddressVillage("");
-                  }}
+                      setAddressDistrict(
+                        selectedOption?.value || ""
+                      );
 
-                  placeholder="Select District"
+                      setAddressTaluka("");
+                      setAddressVillage("");
+                    }}
 
-                  isSearchable
+                    placeholder="Select District"
 
-                  className="text-black"
-                />
+                    isSearchable
 
-                <Select
-                  isClearable
-                  noOptionsMessage={() => "No results found"}
-                  styles={customSelectStyles}
+                    className="text-slate-900"
+                  />
+                </div>
 
-                  options={addressTalukas.map((t) => ({
-                    value: t,
-                    label: t,
-                  }))}
+                <div>
+                  <label className={fieldLabel}>Taluka</label>
+                  <Select
+                    aria-label="Address Taluka"
+                    isClearable
+                    noOptionsMessage={() => "No results found"}
+                    styles={customSelectStyles}
 
-                  value={
-                    addressTaluka
-                      ? {
-                        value: addressTaluka,
-                        label: addressTaluka,
-                      }
-                      : null
-                  }
+                    options={addressTalukas.map((t) => ({
+                      value: t,
+                      label: t,
+                    }))}
 
-                  onChange={(selectedOption) => {
+                    value={
+                      addressTaluka
+                        ? {
+                          value: addressTaluka,
+                          label: addressTaluka,
+                        }
+                        : null
+                    }
 
-                    setAddressTaluka(
-                      selectedOption?.value || ""
-                    );
+                    onChange={(selectedOption) => {
 
-                    setAddressVillage("");
-                  }}
+                      setAddressTaluka(
+                        selectedOption?.value || ""
+                      );
 
-                  placeholder="Select Taluka"
+                      setAddressVillage("");
+                    }}
 
-                  isSearchable
+                    placeholder="Select Taluka"
 
-                  isDisabled={!addressDistrict}
+                    isSearchable
 
-                  className="text-black"
-                />
+                    isDisabled={!addressDistrict}
 
-                <Select
-                  isClearable
-                  noOptionsMessage={() => "No results found"}
-                  styles={customSelectStyles}
+                    className="text-slate-900"
+                  />
+                </div>
 
-                  options={addressVillages.map((v) => ({
-                    value: v,
-                    label: v,
-                  }))}
+                <div>
+                  <label className={fieldLabel}>Village</label>
+                  <Select
+                    aria-label="Address Village"
+                    isClearable
+                    noOptionsMessage={() => "No results found"}
+                    styles={customSelectStyles}
 
-                  value={
-                    addressVillage
-                      ? {
-                        value: addressVillage,
-                        label: addressVillage,
-                      }
-                      : null
-                  }
+                    options={addressVillages.map((v) => ({
+                      value: v,
+                      label: v,
+                    }))}
 
-                  onChange={(selectedOption) => {
+                    value={
+                      addressVillage
+                        ? {
+                          value: addressVillage,
+                          label: addressVillage,
+                        }
+                        : null
+                    }
 
-                    setAddressVillage(
-                      selectedOption?.value || ""
-                    );
-                  }}
+                    onChange={(selectedOption) => {
 
-                  placeholder="Select Village"
+                      setAddressVillage(
+                        selectedOption?.value || ""
+                      );
+                    }}
 
-                  isSearchable
+                    placeholder="Select Village"
 
-                  isDisabled={!addressTaluka}
+                    isSearchable
 
-                  className="text-black"
-                />
+                    isDisabled={!addressTaluka}
 
+                    className="text-slate-900"
+                  />
+                </div>
 
-                <div className="flex gap-3 pt-2">
+              </div>
 
-                  <button
-                    onClick={() => setShowReportForm(false)}
-                    className="flex-1 bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 py-2.5 rounded-xl text-sm font-medium"
-                  >
-                    Cancel
-                  </button>
+              <div className="grid shrink-0 grid-cols-2 gap-3 border-t border-slate-200 bg-slate-50 p-4">
 
-                  <button
-                    onClick={() => {
+                <button
+                  onClick={() => setShowReportForm(false)}
+                  className={btnSecondary}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={() => {
 
                       const trimmedName =
                         applicantName.trim();
@@ -1786,17 +1872,15 @@ export default function Home() {
                       }
 
                     }}
-                    disabled={submitting}
-                    className="flex-1 bg-red-700 hover:bg-red-800 text-white py-2.5 rounded-xl text-sm font-semibold disabled:bg-gray-400"
-                  >
-                    {
-                      actionType === "preview"
-                        ? "Preview Certificate"
-                        : (submitting ? "Submitting..." : "Request Certificate")
-                    }
-                  </button>
-
-                </div>
+                  disabled={submitting}
+                  className={btnPrimary}
+                >
+                  {
+                    actionType === "preview"
+                      ? "Preview Certificate"
+                      : (submitting ? "Submitting..." : "Request Certificate")
+                  }
+                </button>
 
               </div>
 
@@ -1805,9 +1889,11 @@ export default function Home() {
           </div>
 
         )}
+
+        {/* ORIGINAL RECORD VIEWER */}
         {showOriginalModal && (
           <div
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-slate-800"
             onClick={(e) => {
               if (e.target === e.currentTarget) {
                 setShowOriginalModal(false);
@@ -1816,88 +1902,81 @@ export default function Home() {
           >
             <div className="flex h-full flex-col">
 
-              {/* =========================
-          TOP TOOLBAR
-      ========================= */}
-              <div className="sticky top-0 z-50 shrink-0 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur-md">
-                <div className="mx-auto flex h-14 w-full items-center justify-between px-3 sm:px-5">
+              {/* TOP TOOLBAR */}
+              <div className="relative z-50 shrink-0 border-b border-slate-200 bg-white shadow-sm">
+                <div className="mx-auto flex h-14 w-full items-center justify-between gap-2 px-3 sm:px-5">
 
-                  {/* LEFT - ZOOM */}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setZoom((prev) =>
-                          Math.max(0.5, Number((prev - 0.25).toFixed(2)))
-                        )
-                      }
-                      disabled={zoom <= 0.5}
-                      aria-label="Zoom out"
-                      className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
-                    >
-                      <FaMinus size={12} />
-                    </button>
+                    <div className="flex items-center overflow-hidden rounded-md border border-slate-300 bg-white">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setZoom((prev) =>
+                            Math.max(0.5, Number((prev - 0.25).toFixed(2)))
+                          )
+                        }
+                        disabled={zoom <= 0.5}
+                        aria-label="Zoom out"
+                        className="flex h-9 w-9 items-center justify-center text-slate-800 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700 active:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-35"
+                      >
+                        <FaMinus size={12} />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setZoom(1)}
+                        title="Reset zoom"
+                        className="flex h-9 min-w-[64px] items-center justify-center border-x border-slate-300 bg-slate-50 px-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700"
+                      >
+                        {Math.round(zoom * 100)}%
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setZoom((prev) =>
+                            Math.min(5, Number((prev + 0.25).toFixed(2)))
+                          )
+                        }
+                        disabled={zoom >= 5}
+                        aria-label="Zoom in"
+                        className="flex h-9 w-9 items-center justify-center text-slate-800 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-700 active:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-35"
+                      >
+                        <FaPlus size={12} />
+                      </button>
+                    </div>
 
                     <button
                       type="button"
                       onClick={() => setZoom(1)}
-                      title="Reset zoom"
-                      className="flex h-8 min-w-[58px] items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 active:scale-95"
-                    >
-                      {Math.round(zoom * 100)}%
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setZoom((prev) =>
-                          Math.min(5, Number((prev + 0.25).toFixed(2)))
-                        )
-                      }
-                      disabled={zoom >= 5}
-                      aria-label="Zoom in"
-                      className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
-                    >
-                      <FaPlus size={12} />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setZoom(1)}
-                      className="ml-1 hidden h-8 rounded-md px-2.5 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 sm:block"
+                      className="hidden h-9 rounded-md px-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 sm:block"
                     >
                       Reset
                     </button>
 
                   </div>
 
-                  {/* CENTER - TITLE */}
-                  <div className="absolute left-1/2 -translate-x-1/2">
-                    <h2 className="whitespace-nowrap text-sm font-semibold text-slate-800">
-                      Original Record
-                    </h2>
-                  </div>
+                  <h2 className="hidden whitespace-nowrap text-base font-bold text-[#12285a] md:block">
+                    Original Record
+                  </h2>
 
-                  {/* RIGHT - CLOSE */}
                   <button
                     type="button"
                     onClick={() => setShowOriginalModal(false)}
                     aria-label="Close"
-                    className="flex h-8 items-center gap-1.5 rounded-md bg-slate-900 px-3 text-xs font-medium text-white transition hover:bg-slate-800 active:scale-95"
+                    className="flex h-9 items-center gap-1.5 rounded-md bg-[#12285a] px-3 text-sm font-semibold text-white transition hover:bg-[#0a1f44] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2 active:scale-95"
                   >
-                    <FaTimes size={11} />
+                    <FaTimes size={12} />
                     <span className="hidden sm:inline">Close</span>
                   </button>
 
                 </div>
               </div>
 
-              {/* =========================
-          IMAGE VIEWER
-      ========================= */}
+              {/* IMAGE VIEWER */}
               <div
-                className="flex-1 overflow-auto p-3 sm:p-4"
+                className="flex-1 overflow-auto p-3 sm:p-5"
                 onWheel={(e) => {
                   if (e.ctrlKey || e.metaKey) {
                     e.preventDefault();
@@ -1915,91 +1994,84 @@ export default function Home() {
                 }}
               >
 
-                {/* =========================
-            PAGE NAVIGATION
-        ========================= */}
-                <div className="mx-auto mb-3 flex w-fit max-w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 shadow-sm">
+              {/* PAGE NAVIGATION */}
+              <div className="mx-auto mb-3 flex w-fit max-w-full flex-wrap items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-md">
 
-                  {/* PREVIOUS */}
-                  <button
-                    type="button"
-                    onClick={goToPreviousOriginalPage}
-                    disabled={
-                      originalPageNo === null ||
-                      originalVolumePages.indexOf(originalPageNo) <= 0
-                    }
-                    className="flex h-8 items-center rounded-md border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
-                  >
-                    <span className="mr-1">←</span>
-                    Previous
-                  </button>
+                <button
+                  type="button"
+                  onClick={goToPreviousOriginalPage}
+                  disabled={
+                    originalPageNo === null ||
+                    originalVolumePages.indexOf(originalPageNo) <= 0
+                  }
+                  className="flex h-9 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  <span className="mr-1">←</span>
+                  Previous
+                </button>
 
-                  {/* PAGE INPUT */}
-                  <div className="flex items-center gap-1.5 px-1">
+                <div className="flex items-center gap-1.5 px-1">
 
-                    <span className="text-xs font-medium text-slate-500">
-                      Page
-                    </span>
+                  <span className="text-sm font-medium text-slate-700">
+                    Page
+                  </span>
 
-                    <input
-                      type="number"
-                      min={1}
-                      value={originalPageNo ?? ""}
-                      onChange={(e) => {
-                        const value = Number(e.target.value);
+                  <input
+                    type="number"
+                    min={1}
+                    value={originalPageNo ?? ""}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
 
-                        if (e.target.value === "") {
-                          setOriginalPageNo(null);
-                          return;
+                      if (e.target.value === "") {
+                        setOriginalPageNo(null);
+                        return;
+                      }
+
+                      if (Number.isInteger(value) && value > 0) {
+                        setOriginalPageNo(value);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const value = Number(
+                          (e.target as HTMLInputElement).value
+                        );
+
+                        if (
+                          Number.isInteger(value) &&
+                          value > 0
+                        ) {
+                          loadOriginalRecordPage(value);
                         }
+                      }
+                    }}
+                    aria-label="Page number"
+                    className="h-9 w-20 rounded-md border border-slate-300 bg-white px-2 text-center text-sm font-semibold text-slate-900 outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-600/25"
+                  />
 
-                        if (Number.isInteger(value) && value > 0) {
-                          setOriginalPageNo(value);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          const value = Number(
-                            (e.target as HTMLInputElement).value
-                          );
-
-                          if (
-                            Number.isInteger(value) &&
-                            value > 0
-                          ) {
-                            loadOriginalRecordPage(value);
-                          }
-                        }
-                      }}
-                      className="h-8 w-16 rounded-md border border-slate-200 bg-white px-2 text-center text-xs font-medium text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    />
-
-                    <span className="whitespace-nowrap text-xs text-slate-400">
-                      / {originalTotalPages}
-                    </span>
-
-                  </div>
-
-                  {/* NEXT */}
-                  <button
-                    type="button"
-                    onClick={goToNextOriginalPage}
-                    disabled={
-                      originalPageNo === null ||
-                      originalVolumePages.indexOf(originalPageNo) ===
-                      originalVolumePages.length - 1
-                    }
-                    className="flex h-8 items-center rounded-md border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
-                  >
-                    Next
-                    <span className="ml-1">→</span>
-                  </button>
+                  <span className="whitespace-nowrap text-sm font-medium text-slate-600">
+                    / {originalTotalPages}
+                  </span>
 
                 </div>
 
-                {/* =========================
-            IMAGE
-        ========================= */}
+                <button
+                  type="button"
+                  onClick={goToNextOriginalPage}
+                  disabled={
+                    originalPageNo === null ||
+                    originalVolumePages.indexOf(originalPageNo) ===
+                    originalVolumePages.length - 1
+                  }
+                  className="flex h-9 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 transition hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  Next
+                  <span className="ml-1">→</span>
+                </button>
+
+              </div>
+
                 <div className="flex min-w-full justify-center">
 
                   <div
@@ -2014,7 +2086,7 @@ export default function Home() {
                       onContextMenu={(e) => e.preventDefault()}
                       onDoubleClick={() => setZoom(1)}
                       draggable={false}
-                      className="mx-auto block select-none rounded-lg shadow-xl"
+                      className="mx-auto block select-none rounded-sm bg-white shadow-2xl"
                       style={{
                         width: "100%",
                         maxWidth: "none",
@@ -2026,6 +2098,8 @@ export default function Home() {
                 </div>
 
               </div>
+
+
             </div>
           </div>
         )}

@@ -13,8 +13,21 @@ import {
   FaExclamationCircle,
   FaArrowRight,
   FaUser,
+  FaLandmark,
 } from "react-icons/fa";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL!;
+
+/* ------------------------------------------------------------------
+   UI-only style tokens (same system as the rest of the portal)
+------------------------------------------------------------------ */
+const btnBase =
+  "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
+const btnPrimary = `${btnBase} bg-[#12285a] text-white shadow-sm hover:bg-[#0a1f44] focus-visible:ring-blue-700`;
+const btnOutline = `${btnBase} border border-[#12285a] bg-white text-[#12285a] hover:bg-blue-50 focus-visible:ring-blue-700`;
+const fieldLabel = "mb-1 block text-sm font-semibold text-slate-700";
+const inputCls =
+  "h-10 w-full rounded-md border border-slate-300 bg-white pl-10 pr-10 text-sm text-slate-900 placeholder:text-slate-500 transition focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600/25";
+
 export default function OfficerLogin() {
 
   const router = useRouter();
@@ -98,210 +111,222 @@ export default function OfficerLogin() {
 
     }
   };
-  
+
+  // Presentation-only react-select theme
   const customSelectStyles = {
-  control: (provided: any, state: any) => ({
-    ...provided,
-    minHeight: "50px",
-    borderRadius: "12px",
-    border: state.isFocused
-      ? "2px solid #3b82f6"
-      : "2px solid #e5e7eb",
-    boxShadow: state.isFocused ? "0 0 0 3px rgba(59,130,246,0.15)" : "none",
-    "&:hover": {
-      border: "2px solid #3b82f6",
-    },
-    transition: "all 0.15s ease",
-  }),
-
-  menu: (provided: any) => ({
-    ...provided,
-    zIndex: 9999,
-    borderRadius: "12px",
-    overflow: "hidden",
-    boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1)",
-  }),
-
-  option: (provided: any, state: any) => ({
-    ...provided,
-    color: state.isSelected ? "white" : "black",
-    backgroundColor: state.isSelected
-      ? "#2563eb"
-      : state.isFocused
-      ? "#eff6ff"
-      : "white",
-    cursor: "pointer",
-    padding: "10px 14px",
-  }),
-
-  singleValue: (provided: any) => ({
-    ...provided,
-    color: "black",
-  }),
-
-  placeholder: (provided: any) => ({
-    ...provided,
-    color: "#9ca3af",
-  }),
-};
+    control: (provided: any, state: any) => ({
+      ...provided,
+      minHeight: "40px",
+      borderRadius: "6px",
+      backgroundColor: "#ffffff",
+      border: state.isFocused
+        ? "1px solid #1d4ed8"
+        : "1px solid #cbd5e1",
+      boxShadow: state.isFocused ? "0 0 0 3px rgba(37,99,235,0.2)" : "none",
+      "&:hover": {
+        border: "1px solid #1d4ed8",
+      },
+      fontSize: "14px",
+      transition: "all 0.15s ease",
+    }),
+    valueContainer: (provided: any) => ({
+      ...provided,
+      padding: "0 10px",
+    }),
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+    indicatorsContainer: (provided: any) => ({
+      ...provided,
+      height: "40px",
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      zIndex: 9999,
+      borderRadius: "10px",
+      overflow: "hidden",
+      border: "1px solid #e2e8f0",
+      boxShadow: "0 12px 28px -8px rgba(10,31,68,0.25)",
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      color: state.isSelected ? "white" : "#0f172a",
+      backgroundColor: state.isSelected
+        ? "#0f2a5f"
+        : state.isFocused
+          ? "#eff6ff"
+          : "white",
+      cursor: "pointer",
+      padding: "9px 12px",
+      fontSize: "14px",
+      lineHeight: 1.5,
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: "#0f172a",
+      fontWeight: 500,
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: "#64748b",
+      fontSize: "14px",
+    }),
+  };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center bg-[#eef3fa] px-4 py-6 [background-image:linear-gradient(rgba(18,40,90,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(18,40,90,0.06)_1px,transparent_1px)] [background-size:26px_26px]">
 
-      {/* Decorative background accents */}
-      <div className="absolute -top-28 -right-28 w-80 h-80 bg-blue-200/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-28 -left-28 w-80 h-80 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10">
 
-      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 border border-gray-200 relative">
+        <div className="h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-[#12285a]" />
 
-        <div className="text-center mb-5">
+        <div className="p-6 sm:p-7">
 
-          <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-200 mb-4">
-            <FaShieldAlt size={10} />
-            Official Government Portal
-          </span>
+          <div className="mb-5 text-center">
 
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 ring-4 ring-blue-50 shadow-sm">
-            <span className="text-4xl">🏛️</span>
-          </div>
+            <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#12285a] text-amber-400 shadow-sm">
+              <FaLandmark size={26} />
+            </span>
 
-          <h1 className="text-3xl font-extrabold text-blue-900 tracking-wide">
-            Collector Office
-          </h1>
+            <h1 className="text-2xl font-bold text-[#12285a]">
+              Collector Office, Ahilyanagar
+            </h1>
 
-          <h2 className="text-2xl font-bold text-slate-700 mt-1">
-            Ahilyanagar
-          </h2>
+            <p className="mt-1 text-base font-medium text-slate-700">
+              Land Acquisition Certificate Portal
+            </p>
 
-          <p className="mt-2 text-gray-600 text-base">
-            Land Acquisition Certificate Portal
-          </p>
-
-          <p className="mt-1 text-sm text-gray-500 font-medium">
-            Officer Login
-          </p>
-
-        </div>
-
-        {error && (
-          <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 text-sm font-medium">
-            <FaExclamationCircle className="shrink-0" />
-            {error}
-          </div>
-        )}
-
-        <div className="space-y-3">
-
-          <div>
-
-            <label className="block mb-2 font-semibold text-gray-700">
-              Designation
-            </label>
-
-            <Select
-              styles={customSelectStyles}
-              placeholder="Select Designation"
-              isSearchable
-              isClearable
-              options={designations.map((d: any) => ({
-                value: d.designation_id,
-                label: d.designation,
-              }))}
-              value={
-                designationId
-                  ? {
-                      value: designationId,
-                      label:
-                        designations.find(
-                          (d: any) =>
-                            String(d.designation_id) ===
-                            String(designationId)
-                        )?.designation || "",
-                    }
-                  : null
-              }
-              onChange={(selectedOption: any) =>
-                setDesignationId(
-                  selectedOption?.value?.toString() || ""
-                )
-              }
-            />
-
-          </div>
-
-          <div>
-
-            <label className="block mb-2 font-semibold text-gray-700">
-              Password
-            </label>
-
-            <div className="relative">
-
-              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter Password"
-                value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleLogin();
-                  }
-                }}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 pl-11 pr-11 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-              />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                tabIndex={-1}
-              >
-                {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
-              </button>
-
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                <FaShieldAlt size={10} className="text-amber-600" />
+                Official Government Portal
+              </span>
+              <span className="rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-semibold text-[#12285a]">
+                Officer Login
+              </span>
             </div>
 
           </div>
 
-          <button
-            onClick={handleLogin}
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-700 to-blue-900 text-white p-3 text-base rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                Logging In...
-              </>
-            ) : (
-              <>
-                Login
-                <FaArrowRight size={13} />
-              </>
-            )}
-          </button>
+          {error && (
+            <div
+              role="alert"
+              className="mb-4 flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm font-medium text-red-800"
+            >
+              <FaExclamationCircle className="shrink-0" />
+              {error}
+            </div>
+          )}
 
-          <div className="flex items-center gap-3 pt-1">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Or</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
+          <div className="space-y-4">
 
-          <div className="text-center">
+            <div>
 
-            <p className="text-sm text-gray-500 mb-3">
-              Public Users
-            </p>
+              <label className={fieldLabel}>
+                Designation
+              </label>
+
+              <Select
+                aria-label="Designation"
+                styles={customSelectStyles}
+                placeholder="Select Designation"
+                isSearchable
+                isClearable
+                options={designations.map((d: any) => ({
+                  value: d.designation_id,
+                  label: d.designation,
+                }))}
+                value={
+                  designationId
+                    ? {
+                        value: designationId,
+                        label:
+                          designations.find(
+                            (d: any) =>
+                              String(d.designation_id) ===
+                              String(designationId)
+                          )?.designation || "",
+                      }
+                    : null
+                }
+                onChange={(selectedOption: any) =>
+                  setDesignationId(
+                    selectedOption?.value?.toString() || ""
+                  )
+                }
+              />
+
+            </div>
+
+            <div>
+
+              <label htmlFor="officer-password" className={fieldLabel}>
+                Password
+              </label>
+
+              <div className="relative">
+
+                <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={13} />
+
+                <input
+                  id="officer-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleLogin();
+                    }
+                  }}
+                  className={inputCls}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                </button>
+
+              </div>
+
+            </div>
+
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className={btnPrimary}
+            >
+              {loading ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Logging In...
+                </>
+              ) : (
+                <>
+                  Login
+                  <FaArrowRight size={12} />
+                </>
+              )}
+            </button>
+
+            <div className="flex items-center gap-3 pt-1">
+              <div className="h-px flex-1 bg-slate-200" />
+              <span className="text-xs font-semibold text-slate-500">Public Users</span>
+              <div className="h-px flex-1 bg-slate-200" />
+            </div>
 
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-5 py-2 border-2 border-blue-700 text-blue-700 rounded-xl font-semibold hover:bg-blue-700 hover:text-white transition"
+              className={btnOutline}
             >
-              <FaUser size={13} />
+              <FaUser size={12} />
               User Login
             </Link>
 

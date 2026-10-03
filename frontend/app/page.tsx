@@ -1,11 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { FaMobileAlt, FaShieldAlt, FaExclamationCircle, FaArrowRight, FaUserShield } from "react-icons/fa";
+import { FaMobileAlt, FaShieldAlt, FaExclamationCircle, FaArrowRight, FaUserShield, FaLandmark } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+/* ------------------------------------------------------------------
+   UI-only style tokens (same system as the rest of the portal)
+------------------------------------------------------------------ */
+const btnBase =
+  "inline-flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md px-4 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100";
+const btnPrimary = `${btnBase} bg-[#12285a] text-white shadow-sm hover:bg-[#0a1f44] focus-visible:ring-blue-700`;
+const btnOutline = `${btnBase} border border-[#12285a] bg-white text-[#12285a] hover:bg-blue-50 focus-visible:ring-blue-700`;
+const fieldLabel = "mb-1 block text-sm font-semibold text-slate-700";
+const inputCls =
+  "h-10 w-full rounded-md border border-slate-300 bg-white pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-500 transition focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600/25";
+
 export default function LoginPage() {
     const [mobileNumber, setMobileNumber] = useState("");
     const router = useRouter();
@@ -72,115 +84,111 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="h-screen bg-gradient-to-br from-blue-50 via-slate-100 to-blue-100 flex items-center justify-center px-4 relative overflow-hidden">
+        <div className="flex min-h-screen items-center justify-center bg-[#eef3fa] px-4 py-6 [background-image:linear-gradient(rgba(18,40,90,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(18,40,90,0.06)_1px,transparent_1px)] [background-size:26px_26px]">
 
-            {/* Decorative background accents */}
-            <div className="absolute -top-28 -right-28 w-72 h-72 bg-blue-200/40 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-28 -left-28 w-72 h-72 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10">
 
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 border border-gray-200 relative">
+                <div className="h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-[#12285a]" />
 
-                <div className="text-center mb-5">
+                <div className="p-6 sm:p-7">
 
-                    <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-[11px] font-semibold px-2.5 py-1 rounded-full border border-blue-200 mb-3">
-                        <FaShieldAlt size={9} />
-                        Official Government Portal
-                    </span>
+                    <div className="mb-5 text-center">
 
-                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 ring-4 ring-blue-50 shadow-sm">
-                        <span className="text-2xl">🏛️</span>
+                        <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#12285a] text-amber-400 shadow-sm">
+                            <FaLandmark size={26} />
+                        </span>
+
+                        <h1 className="text-2xl font-bold text-[#12285a]">
+                            Collector Office, Ahilyanagar
+                        </h1>
+
+                        <p className="mt-1 text-base font-medium text-slate-700">
+                            Land Acquisition Certificate Portal
+                        </p>
+
+                        <p className="mt-1 text-sm text-slate-600">
+                            Search Land Acquisition Records and Generate Certificates Online
+                        </p>
+
+                        <span className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                            <FaShieldAlt size={10} className="text-amber-600" />
+                            Official Government Portal
+                        </span>
+
                     </div>
-                    <h1 className="text-2xl font-extrabold text-blue-900 tracking-wide">
-                        Collector Office
-                    </h1>
 
-                    <h2 className="text-xl font-bold text-slate-700 mt-0.5">
-                        Ahilyanagar
-                    </h2>
+                    <div className="space-y-4">
 
-                    <p className="mt-2 text-gray-600 text-sm">
-                        Land Acquisition Certificate Portal
-                    </p>
+                        <div>
+                            <label htmlFor="user-mobile" className={fieldLabel}>
+                                Mobile Number
+                            </label>
 
-                    <p className="mt-1 text-xs text-gray-500">
-                        Search Land Acquisition Records and Generate Certificates Online
-                    </p>
+                            <div className="relative">
+                                <FaMobileAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={13} />
 
-                </div>
-
-                <div className="space-y-3">
-
-                    <div>
-                        <label className="block mb-1.5 text-sm font-semibold text-gray-700">
-                            Mobile Number
-                        </label>
-
-                        <div className="relative">
-                            <FaMobileAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-
-                            <input
-                                type="text"
-                                value={mobileNumber}
-                                onChange={(e) =>
-                                    setMobileNumber(e.target.value)
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        handleLogin();
+                                <input
+                                    id="user-mobile"
+                                    type="text"
+                                    value={mobileNumber}
+                                    onChange={(e) =>
+                                        setMobileNumber(e.target.value)
                                     }
-                                }}
-                                placeholder="Enter Mobile Number"
-                                className="w-full border-2 border-gray-200 rounded-xl py-2.5 pl-10 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                            />
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleLogin();
+                                        }
+                                    }}
+                                    placeholder="Enter Mobile Number"
+                                    className={inputCls}
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    {error && (
-                      <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-xl text-xs font-medium">
-                        <FaExclamationCircle className="shrink-0" size={12} />
-                        {error}
-                      </div>
-                    )}
+                        {error && (
+                          <div
+                            role="alert"
+                            className="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm font-medium text-red-800"
+                          >
+                            <FaExclamationCircle className="shrink-0" size={13} />
+                            {error}
+                          </div>
+                        )}
 
-                    <button
-                      onClick={handleLogin}
-                      disabled={loading}
-                      className="w-full bg-gradient-to-r from-blue-700 to-blue-900 text-white py-2.5 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
-                    >
-                      {loading ? (
-                        <>
-                          <span className="h-3.5 w-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                          Verifying...
-                        </>
-                      ) : (
-                        <>
-                          Login
-                          <FaArrowRight size={12} />
-                        </>
-                      )}
-                    </button>
+                        <button
+                          onClick={handleLogin}
+                          disabled={loading}
+                          className={btnPrimary}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                              Verifying...
+                            </>
+                          ) : (
+                            <>
+                              Login
+                              <FaArrowRight size={12} />
+                            </>
+                          )}
+                        </button>
 
-                    <div className="flex items-center gap-3 pt-1">
-                      <div className="flex-1 h-px bg-gray-200" />
-                      <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">Or</span>
-                      <div className="flex-1 h-px bg-gray-200" />
-                    </div>
+                        <div className="flex items-center gap-3 pt-1">
+                          <div className="h-px flex-1 bg-slate-200" />
+                          <span className="text-xs font-semibold text-slate-500">Government Officers</span>
+                          <div className="h-px flex-1 bg-slate-200" />
+                        </div>
 
-                    <div className="text-center">
-
-                      <p className="text-xs text-gray-500 mb-2">
-                        Government Officers
-                      </p>
-
-                      <Link
-                        href="/officer/login"
-                        className="inline-flex items-center gap-2 px-5 py-1.5 border-2 border-blue-700 text-blue-700 rounded-xl text-sm font-semibold hover:bg-blue-700 hover:text-white transition"
-                      >
-                        <FaUserShield size={12} />
-                        Officer Login
-                      </Link>
+                        <Link
+                          href="/officer/login"
+                          className={btnOutline}
+                        >
+                          <FaUserShield size={13} />
+                          Officer Login
+                        </Link>
 
                     </div>
+
                 </div>
 
             </div>
